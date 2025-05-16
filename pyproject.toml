@@ -4,4 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "click>=8.2.0",
+    "litellm>=1.69.3",
+    "sqlalchemy>=2.0.41",
+    "textual>=3.2.0",
+]
