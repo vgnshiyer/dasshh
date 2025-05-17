@@ -23,8 +23,15 @@ class NewMessage(Message):
         self.message = message
 
 
+class NewSession(Message):
+    """Create a new session."""
+
+    def __init__(self):
+        super().__init__()
+
+
 class LoadSession(Message):
-    """Load a session."""
+    """Load a previous session."""
 
     def __init__(self, session_id: str):
         super().__init__()
@@ -37,3 +44,70 @@ class DeleteSession(Message):
     def __init__(self, session_id: str):
         super().__init__()
         self.session_id = session_id
+
+
+# -- Agent runtime events -- #
+
+class AssistantResponseStart(Message):
+    """Event triggered before agent starts processing a query."""
+
+    def __init__(self, invocation_id: str):
+        super().__init__()
+        self.invocation_id = invocation_id
+
+
+class AssistantResponseUpdate(Message):
+    """Event triggered when agent returns a partial response."""
+
+    def __init__(self, invocation_id: str, text: str):
+        super().__init__()
+        self.invocation_id = invocation_id
+        self.text = text
+
+
+class AssistantResponseComplete(Message):
+    """Event triggered when agent completes processing a query."""
+
+    def __init__(self, invocation_id: str, text: str):
+        super().__init__()
+        self.invocation_id = invocation_id
+        self.text = text
+
+
+class AssistantResponseError(Message):
+    """Event triggered when agent encounters an error."""
+
+    def __init__(self, invocation_id: str, error: str):
+        super().__init__()
+        self.invocation_id = invocation_id
+        self.error = error
+
+
+class AssistantToolCallStart(Message):
+    """Event triggered when agent starts a tool call."""
+
+    def __init__(self, id: str, tool_name: str, args: Dict[str, Any]):
+        super().__init__()
+        self.id = id
+        self.tool_name = tool_name
+        self.args = args
+
+
+class AssistantToolCallComplete(Message):
+    """Event triggered when agent completes a tool call."""
+
+    def __init__(self, id: str, tool_name: str, result: Dict):
+        super().__init__()
+        self.id = id
+        self.tool_name = tool_name
+        self.result = result
+
+
+class AssistantToolCallError(Message):
+    """Event triggered when agent encounters an error during a tool call."""
+
+    def __init__(self, id: str, tool_name: str, error: str):
+        super().__init__()
+        self.id = id
+        self.tool_name = tool_name
+        self.error = error
