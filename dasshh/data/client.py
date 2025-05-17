@@ -25,6 +25,7 @@ class DBClient:
         Base.metadata.create_all(bind=self.engine)
 
     def get_db(self) -> Generator[Session, None, None]:
+        """Get a database session."""
         db: Session = self.DatabaseSessionFactory()
         try:
             yield db
