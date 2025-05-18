@@ -46,12 +46,14 @@ class DasshhRuntime:
     """The database service for the runtime."""
     _post_message_callbacks: dict[str, Callable] = {}
     """The current textual component post_message callback for sending Agent events."""
-    _system_prompt: str = (
-        "Your name is Dasshh. You are a helpful assistant.",
-        "You are able to use tools to help the user.",
-        "Your main goal is to save user's time and effort."
-    )
+    _system_prompt: str = """
+    You are a helpful assistant.
+    You are able to use tools to help the user.
+    Your main goal is to save user's time and effort.
+    """
     """The system prompt for the runtime."""
+    _default_error_response: str = "Sorry, I'm having trouble with that. Please try again later."
+    """The default error response for the runtime."""
 
     def __init__(self, session_service: SessionService):
         self._session_service = session_service
@@ -130,10 +132,13 @@ class DasshhRuntime:
 
                 self._after_query(context, final_response)
                 self._post_message_callbacks.pop(context.invocation_id, None)
-                break
             except Exception as e:
-                logger.error(f"-- Error processing query {context.invocation_id} --", exc_info=True)
-                self._after_query(context, str(e))
+                logger.error(
+                    f"-- Error processing query {context.invocation_id}, {str(e)} --",
+                    exc_info=True,
+                )
+                self._after_query(context, self._default_error_response)
+                self._on_query_error(context, e)
                 self._post_message_callbacks.pop(context.invocation_id, None)
                 continue
             except asyncio.CancelledError:
@@ -204,6 +209,18 @@ class DasshhRuntime:
                 "content": content,
             },
             session_id=context.session_id,
+        )
+
+    def _on_query_error(self, context: InvocationContext, e) -> None:
+        """Callback when error during query."""
+        post_message_callback = self.__get_post_message_callback(context)
+        if not post_message_callback:
+            return
+        post_message_callback(
+            AssistantResponseError(
+                invocation_id=context.invocation_id,
+                error=str(e)
+            )
         )
 
     def _before_tool_call(self, context: InvocationContext) -> None:

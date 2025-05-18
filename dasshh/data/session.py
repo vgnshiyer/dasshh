@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 from typing import List
 
@@ -36,14 +35,12 @@ class SessionService:
             db.add(session)
             db.commit()
             db.refresh(session)
-            # Ensure events are loaded before session closes
-            events = list(session.events)
             return Session(
                 id=session.id,
                 detail=session.detail,
                 created_at=session.created_at,
                 updated_at=session.updated_at,
-                events=[self._convert_to_completion_message(event) for event in events],
+                events=[],
             )
 
     def get_session(self, *, session_id: str) -> Session | None:
@@ -144,7 +141,7 @@ class SessionService:
         event = StorageEvent(
             invocation_id=invocation_id,
             session_id=session_id,
-            content=json.dumps(content),
+            content=content,
         )
         with self.db_client.get_db() as db:
             db.add(event)
@@ -153,5 +150,4 @@ class SessionService:
 
     def _convert_to_completion_message(self, event: StorageEvent) -> Message:
         """Convert a storage event to a message"""
-        content = json.loads(event.content)
-        return Message(**content)
+        return Message(**event.content)
