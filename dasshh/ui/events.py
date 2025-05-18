@@ -1,5 +1,3 @@
-import json
-
 from textual.message import Message
 
 
