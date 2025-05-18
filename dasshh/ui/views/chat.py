@@ -97,7 +97,7 @@ class Chat(Widget):
         self.current_session_id = recent_session.id
 
         # load history panel
-        all_sessions: List[Session] = self.session_service.list_sessions()
+        all_sessions: List[Session] = self.session_service.list_sessions(include_events=True)
         self.history_panel.load_sessions(all_sessions, current=self.current_session_id)
 
         # load chat panel and actions panel
@@ -177,7 +177,7 @@ class Chat(Widget):
     @on(AssistantResponseError)
     def on_assistant_response_error(self, event: AssistantResponseError) -> None:
         """Handle when the assistant encounters an error."""
-        self.chat_panel.handle_error(event.error)
+        logger.error(f"Assistant response error: {event.error}")
 
     @on(AssistantToolCallStart)
     def on_assistant_tool_call_start(self, event: AssistantToolCallStart) -> None:

@@ -103,11 +103,3 @@ class ChatPanel(Widget):
 
         container = self.query_one("#messages-container")
         container.scroll_end()
-
-    def handle_error(self, error: str) -> None:
-        """Handle an error in the chat."""
-        if self.current_assistant_message:
-            self.current_assistant_message.content = "Sorry, I encountered an error while processing your request."
-
-        container = self.query_one("#messages-container")
-        container.scroll_end()
