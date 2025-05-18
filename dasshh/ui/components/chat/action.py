@@ -24,10 +24,10 @@ class Action(Static):
     name: reactive[str] = reactive("", layout=True)
     args: reactive[dict] = reactive({}, layout=True)
 
-    def __init__(self, name: str, args: dict | str, *a: Any, **kw: Any) -> None:
+    def __init__(self, name: str, args: dict, *a: Any, **kw: Any) -> None:
         super().__init__(*a, **kw)
         self.name = name
-        self.args = json.loads(args) if isinstance(args, str) else args
+        self.args = args
 
     def render(self):
         title = Text(f"󰓦 Using tool: {self.name}", style="bold green")
@@ -57,10 +57,10 @@ class ActionResult(Static):
     name: reactive[str] = reactive("", layout=True)
     result: reactive[dict] = reactive({}, layout=True)
 
-    def __init__(self, name: str, result: dict | str, *a: Any, **kw: Any) -> None:
+    def __init__(self, name: str, result: dict, *a: Any, **kw: Any) -> None:
         super().__init__(*a, **kw)
         self.name = name
-        self.result = json.loads(result) if isinstance(result, str) else result
+        self.result = result
 
     def render(self):
         title = Text(f"󰄬 Result: {self.name}", style="bold blue")

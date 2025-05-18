@@ -86,21 +86,21 @@ class AssistantResponseError(Message):
 class AssistantToolCallStart(Message):
     """Event triggered when agent starts a tool call."""
 
-    def __init__(self, invocation_id: str, tool_name: str, args: dict | str):
+    def __init__(self, invocation_id: str, tool_name: str, args: dict):
         super().__init__()
         self.invocation_id = invocation_id
         self.tool_name = tool_name
-        self.args = json.dumps(args) if isinstance(args, dict) else args
+        self.args = args
 
 
 class AssistantToolCallComplete(Message):
     """Event triggered when agent completes a tool call."""
 
-    def __init__(self, invocation_id: str, tool_name: str, result: dict | str):
+    def __init__(self, invocation_id: str, tool_name: str, result: dict):
         super().__init__()
         self.invocation_id = invocation_id
         self.tool_name = tool_name
-        self.result = json.dumps(result) if isinstance(result, dict) else result
+        self.result = result
 
 
 class AssistantToolCallError(Message):
