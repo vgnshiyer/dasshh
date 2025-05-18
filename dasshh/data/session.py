@@ -1,9 +1,23 @@
 import json
 from datetime import datetime
+from typing import List
+
+from pydantic import BaseModel
+from litellm.types.utils import Message
+from sqlalchemy.orm import noload
 
 from dasshh.data.client import DBClient
 from dasshh.data.models import StorageSession, StorageEvent
-from dasshh.core.dto import Session, Message, ToolCall, ToolCallResult
+
+
+class Session(BaseModel):
+    """Dasshh session."""
+
+    id: str
+    detail: str
+    created_at: datetime
+    updated_at: datetime
+    events: List[Message]
 
 
 class SessionService:
@@ -22,8 +36,15 @@ class SessionService:
             db.add(session)
             db.commit()
             db.refresh(session)
-
-        return self._convert_to_session(session, include_events=False)
+            # Ensure events are loaded before session closes
+            events = list(session.events)
+            return Session(
+                id=session.id,
+                detail=session.detail,
+                created_at=session.created_at,
+                updated_at=session.updated_at,
+                events=[self._convert_to_completion_message(event) for event in events],
+            )
 
     def get_session(self, *, session_id: str) -> Session | None:
         """Get a session by its ID."""
@@ -33,7 +54,21 @@ class SessionService:
             if session is None:
                 return None
 
-            return self._convert_to_session(session)
+            # Ensure events are loaded before session closes
+            events = list(session.events)
+            return Session(
+                id=session.id,
+                detail=session.detail,
+                created_at=session.created_at,
+                updated_at=session.updated_at,
+                events=[self._convert_to_completion_message(event) for event in events],
+            )
+
+    def get_events(self, *, session_id: str) -> list[Message]:
+        """Get all events for a session."""
+        with self.db_client.get_db() as db:
+            events = db.query(StorageEvent).filter(StorageEvent.session_id == session_id).all()
+            return [self._convert_to_completion_message(event) for event in events]
 
     def get_recent_session(self) -> Session | None:
         """Get the most recent session."""
@@ -41,7 +76,18 @@ class SessionService:
             session: StorageSession | None = (
                 db.query(StorageSession).order_by(StorageSession.updated_at.desc()).first()
             )
-            return self._convert_to_session(session) if session else None
+            if not session:
+                return None
+                
+            # Ensure events are loaded before session closes
+            events = list(session.events)
+            return Session(
+                id=session.id,
+                detail=session.detail,
+                created_at=session.created_at,
+                updated_at=session.updated_at,
+                events=[self._convert_to_completion_message(event) for event in events],
+            )
 
     def update_session(
         self,
@@ -56,13 +102,24 @@ class SessionService:
             session.updated_at = datetime.now()
             db.commit()
 
-    def list_sessions(self) -> list[Session]:
+    def list_sessions(self, include_events: bool = False) -> list[Session]:
         """List all sessions."""
         with self.db_client.get_db() as db:
-            sessions = db.query(StorageSession).all()
+            if include_events:
+                sessions = db.query(StorageSession).all()
+            else:
+                sessions = db.query(StorageSession).options(noload(StorageSession.events)).all()
             return [
-                self._convert_to_session(session, include_events=False)
-                for session in sessions
+                Session(
+                    id=session.id,
+                    detail=session.detail,
+                    created_at=session.created_at,
+                    updated_at=session.updated_at,
+                    events=[
+                        self._convert_to_completion_message(event)
+                        for event in session.events
+                    ] if include_events else [],
+                ) for session in sessions
             ]
 
     def delete_session(self, *, session_id: str) -> None:
@@ -76,56 +133,25 @@ class SessionService:
             db.delete(session)
             db.commit()
 
-    def append_event(
+    def add_event(
         self,
         *,
         invocation_id: str,
         session_id: str,
         content: dict,
-        error: str | None = None,
     ) -> None:
         """Append an event to a session."""
         event = StorageEvent(
             invocation_id=invocation_id,
             session_id=session_id,
             content=json.dumps(content),
-            error=error,
         )
         with self.db_client.get_db() as db:
             db.add(event)
             db.commit()
             db.refresh(event)
 
-    def _convert_to_session(
-        self,
-        session: StorageSession,
-        include_events: bool = True,
-    ) -> Session:
-        """Convert a storage session to a session."""
-        session_dto = Session(
-            id=session.id,
-            detail=session.detail,
-            last_updated_at=session.updated_at,
-        )
-
-        if include_events:
-            session_dto.messages = []
-            session_dto.tools = []
-            for event in session.events:
-                if event.is_tool_call:
-                    session_dto.tools.append(self._convert_to_tool(event))
-                else:
-                    session_dto.messages.append(self._convert_to_message(event))
-        return session_dto
-
-    def _convert_to_message(self, event: StorageEvent) -> Message:
+    def _convert_to_completion_message(self, event: StorageEvent) -> Message:
         """Convert a storage event to a message"""
         content = json.loads(event.content)
-        # TODO
-        pass
-
-    def _convert_to_tool(self, event: StorageEvent) -> ToolCall | ToolCallResult:
-        """Convert a storage event to a message"""
-        content = json.loads(event.content)
-        # TODO
-        pass
+        return Message(**content)

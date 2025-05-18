@@ -1,4 +1,4 @@
-from typing import Dict, Any
+import json
 
 from textual.message import Message
 
@@ -59,19 +59,19 @@ class AssistantResponseStart(Message):
 class AssistantResponseUpdate(Message):
     """Event triggered when agent returns a partial response."""
 
-    def __init__(self, invocation_id: str, text: str):
+    def __init__(self, invocation_id: str, content: str):
         super().__init__()
         self.invocation_id = invocation_id
-        self.text = text
+        self.content = content
 
 
 class AssistantResponseComplete(Message):
     """Event triggered when agent completes processing a query."""
 
-    def __init__(self, invocation_id: str, text: str):
+    def __init__(self, invocation_id: str, content: str):
         super().__init__()
         self.invocation_id = invocation_id
-        self.text = text
+        self.content = content
 
 
 class AssistantResponseError(Message):
@@ -86,28 +86,28 @@ class AssistantResponseError(Message):
 class AssistantToolCallStart(Message):
     """Event triggered when agent starts a tool call."""
 
-    def __init__(self, id: str, tool_name: str, args: Dict[str, Any]):
+    def __init__(self, invocation_id: str, tool_name: str, args: dict | str):
         super().__init__()
-        self.id = id
+        self.invocation_id = invocation_id
         self.tool_name = tool_name
-        self.args = args
+        self.args = json.dumps(args) if isinstance(args, dict) else args
 
 
 class AssistantToolCallComplete(Message):
     """Event triggered when agent completes a tool call."""
 
-    def __init__(self, id: str, tool_name: str, result: Dict):
+    def __init__(self, invocation_id: str, tool_name: str, result: dict | str):
         super().__init__()
-        self.id = id
+        self.invocation_id = invocation_id
         self.tool_name = tool_name
-        self.result = result
+        self.result = json.dumps(result) if isinstance(result, dict) else result
 
 
 class AssistantToolCallError(Message):
     """Event triggered when agent encounters an error during a tool call."""
 
-    def __init__(self, id: str, tool_name: str, error: str):
+    def __init__(self, invocation_id: str, tool_name: str, error: str):
         super().__init__()
-        self.id = id
+        self.invocation_id = invocation_id
         self.tool_name = tool_name
         self.error = error

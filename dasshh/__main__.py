@@ -1,5 +1,7 @@
 import click
 
+from dasshh.core.logging import setup_logging
+
 __version__ = "0.1.0"
 
 
@@ -25,7 +27,7 @@ def main(ctx, version: bool = False, log_file=None, debug=False) -> None:
     import logging
 
     log_level = logging.DEBUG if debug else logging.INFO
-    logging(log_file=log_file, log_level=log_level)
+    setup_logging(log_file=log_file, log_level=log_level)
     logger = logging.getLogger("dasshh.main")
 
     if version:

@@ -1,0 +1,54 @@
+from textual.reactive import reactive
+from textual.widgets import Static
+from rich.markdown import Markdown
+from rich.console import Group
+from rich.text import Text
+from typing import Any
+
+
+class ChatMessage(Static):
+    """A chat message display component."""
+
+    DEFAULT_CSS = """
+    ChatMessage {
+        width: 100%;
+        margin: 1 1;
+        padding: 0 1;
+    }
+
+    .you {
+        border-left: thick $primary;
+        background: $surface 10%;
+    }
+
+    .assistant {
+        border-left: thick $secondary;
+        background: $surface 5%;
+    }
+    """
+
+    content: reactive[str] = reactive("", layout=True)
+
+    def __init__(self, role: str, content: str, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.role = "you" if role == "user" else "assistant"
+        self.content = content
+
+        # Add CSS class based on role
+        self.add_class(role)
+
+    def render(self):
+        # Show typing indicator if the message is from assistant but empty
+        if self.role == "assistant" and not self.content:
+            return Text("typing...", style="italic dim")
+
+        role_icon = "󰀄" if self.role == "you" else "󱙺"
+        role_style = "bold cyan" if self.role == "you" else "bold green"
+
+        title = Text(f"{role_icon} {self.role.capitalize()}", style=role_style)
+        text = Markdown(self.content) if self.content else Text("")
+
+        return Group(
+            title,
+            text
+        )

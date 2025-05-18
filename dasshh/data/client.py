@@ -3,7 +3,7 @@ from typing import Generator
 
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy import create_engine, Engine
-from sqlalchemy.ext.declarative import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase
 
 
 class Base(DeclarativeBase):
@@ -27,10 +27,4 @@ class DBClient:
     def get_db(self) -> Generator[Session, None, None]:
         """Get a database session."""
         db: Session = self.DatabaseSessionFactory()
-        try:
-            yield db
-        except Exception:
-            db.close()
-            raise
-        finally:
-            db.close()
+        return db

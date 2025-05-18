@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, ForeignKey, relationship, JSON, Boolean
+from sqlalchemy import Column, String, DateTime, ForeignKey, JSON
+from sqlalchemy.orm import relationship
 
 from dasshh.data.client import Base
 
@@ -24,7 +25,5 @@ class StorageEvent(Base):
     session_id = Column(String, ForeignKey("sessions.id"))
     timestamp = Column(DateTime)
     content = Column(JSON)
-    error = Column(String)
-    is_tool_call = Column(Boolean)
 
     session = relationship("StorageSession", back_populates="events")
