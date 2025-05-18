@@ -100,16 +100,20 @@ class Chat(Widget):
         all_sessions: List[Session] = self.session_service.list_sessions(include_events=True)
         self.history_panel.load_sessions(all_sessions, current=self.current_session_id)
 
-        # load chat panel and actions panel
-        messages, actions = [], []
-        for event in recent_session.events:
+        # chat and actions panel
+        self._reset_chat()
+
+    def _reset_chat(self) -> None:
+        """Reset current chat window"""
+        current_session: Session = self.session_service.get_session(session_id=self.current_session_id)
+        messages, actions = [Message(role="assistant", content=self.DEFAULT_GREETING)], []
+        for event in current_session.events:
             if event.tool_calls:
                 actions.extend(event.tool_calls)
             elif event.role == "tool":
                 actions.append(event)
             else:
                 messages.append(event)
-
         self.chat_panel.load_messages(messages)
         self.actions_panel.load_actions(actions)
 
@@ -121,11 +125,17 @@ class Chat(Widget):
         self.current_session_id = event.session_id
         self.history_panel.set_current_session(self.current_session_id)
 
+        self._reset_chat()
+
     @on(NewSession)
     def on_new_session(self, _: NewSession) -> None:
         """Handle when a new session is created."""
-        self.current_session_id = self.session_service.new_session().id
+        new_session: Session = self.session_service.new_session()
+        self.current_session_id = new_session.id
+        self.history_panel.add_session(new_session)
         self.history_panel.set_current_session(self.current_session_id)
+
+        self._reset_chat()
 
     @on(DeleteSession)
     def on_delete_session(self, event: DeleteSession) -> None:
@@ -158,6 +168,8 @@ class Chat(Widget):
             session_id=self.current_session_id,
             post_message_callback=self.post_message
         )
+
+    # -- Assistant events --
 
     @on(AssistantResponseStart)
     def on_assistant_response_start(self, _: AssistantResponseStart) -> None:
