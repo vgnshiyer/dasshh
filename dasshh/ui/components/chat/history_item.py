@@ -25,9 +25,18 @@ class DeleteIcon(Static):
     }
     """
 
+    selected: reactive[bool] = reactive(False, layout=True)
+
     def __init__(self, session_id: str, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.session_id = session_id
+
+    def watch_selected(self, selected: bool) -> None:
+        """Watch for changes to the selected state."""
+        if selected:
+            self.add_class("selected")
+        else:
+            self.remove_class("selected")
 
     def on_click(self) -> None:
         """Handle click events on this widget."""
@@ -45,10 +54,6 @@ class HistoryItem(Static):
         margin-top: 1;
         padding: 1;
 
-        &.selected {
-            border-left: thick $success;
-            background: $panel-lighten-1;
-        }
     }
     """
 

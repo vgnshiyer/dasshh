@@ -71,6 +71,11 @@ class HistoryPanel(Widget):
                 border-left: thick $accent;
                 background: $panel 20%;
             }
+
+            &.selected {
+                border-left: thick $success;
+                background: $panel-lighten-1;
+            }
         }
     }
     """
@@ -114,13 +119,23 @@ class HistoryPanel(Widget):
                 timestamp=session.updated_at,
             )
             delete_icon = DeleteIcon(session_id=session.id)
-
             # Mark current session
             if session.id == current:
                 history_item.selected = True
-
+                delete_icon.selected = True
             container.mount(history_item, delete_icon)
+        container.scroll_end()
 
+    def add_session(self, session: Session) -> None:
+        """Add a session to the history panel."""
+        container = self.query_one("#history-container", ScrollableContainer)
+        history_item = HistoryItem(
+            session_id=session.id,
+            detail=session.detail,
+            timestamp=session.updated_at,
+        )
+        delete_icon = DeleteIcon(session_id=session.id)
+        container.mount(history_item, delete_icon)
         container.scroll_end()
 
     def set_current_session(self, session_id: str) -> None:
@@ -128,6 +143,8 @@ class HistoryPanel(Widget):
         # Update selected state for all items
         container = self.query_one("#history-container", ScrollableContainer)
         for item in container.query(HistoryItem):
+            item.selected = item.session_id == session_id
+        for item in container.query(DeleteIcon):
             item.selected = item.session_id == session_id
 
     def get_history_item_widget(self, session_id: str) -> HistoryItem | None:
