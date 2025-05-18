@@ -1,0 +1,219 @@
+import asyncio
+import logging
+import uuid
+from collections import namedtuple
+from typing import Callable, AsyncGenerator
+
+from litellm import acompletion
+from litellm.types.utils import ModelResponse
+
+from dasshh.data.session import SessionService
+from dasshh.ui.events import (
+    AssistantResponseStart,
+    AssistantResponseUpdate,
+    AssistantResponseComplete,
+    AssistantResponseError,
+    AssistantToolCallStart,
+    AssistantToolCallComplete,
+    AssistantToolCallError,
+)
+
+logger = logging.getLogger(__name__)
+
+
+InvocationContext = namedtuple(
+    "InvocationContext",
+    [
+        "invocation_id",
+        "session_id",
+        "message",
+    ]
+)
+
+
+class DasshhRuntime:
+    """
+    Agent runtime for Dasshh.
+    """
+
+    _model: str = "gemini/gemini-2.0-flash"
+    """The model to use for the runtime."""
+    _queue: asyncio.Queue
+    """The queue of queries to be processed."""
+    _worker: asyncio.Task
+    """The worker task for the runtime."""
+    _session_service: SessionService
+    """The database service for the runtime."""
+    _post_message_callbacks: dict[str, Callable] = {}
+    """The current textual component post_message callback for sending Agent events."""
+    _system_prompt: str = (
+        "Your name is Dasshh. You are a helpful assistant.",
+        "You are able to use tools to help the user.",
+        "Your main goal is to save user's time and effort."
+    )
+    """The system prompt for the runtime."""
+
+    def __init__(self, session_service: SessionService):
+        self._session_service = session_service
+        self._worker = None
+        self._queue = asyncio.Queue()
+
+    @property
+    def system_prompt(self) -> str:
+        return {
+            "role": "system",
+            "content": self._system_prompt,
+        }
+
+    async def start(self):
+        """Start the runtime."""
+        logger.info("-- Starting Dasshh runtime --")
+        self._worker = asyncio.create_task(self._process_queue())
+
+    async def stop(self):
+        """Stop the runtime."""
+        if self._worker:
+            logger.info("-- Stopping Dasshh runtime --")
+            self._worker.cancel()
+            try:
+                await self._worker
+            except asyncio.CancelledError:
+                pass
+            self._worker = None
+
+    async def submit_query(
+        self,
+        *,
+        message: str,
+        session_id: str,
+        post_message_callback: Callable,
+    ) -> None:
+        """
+        Submit a query to the runtime.
+
+        Args:
+            message: The message to send to the runtime.
+            session_id: The session id to send the message to.
+            post_message_callback: The callback to post messages to the UI.
+        """
+        invocation_id = str(uuid.uuid4())
+        logger.info(f"-- Submitting query {invocation_id} --")
+
+        self._post_message_callbacks[invocation_id] = post_message_callback
+        await self._queue.put(
+            InvocationContext(
+                invocation_id=invocation_id,
+                message={
+                    "role": "user",
+                    "content": message,
+                },
+                session_id=session_id,
+            )
+        )
+
+    async def _process_queue(self):
+        """Process the query queue."""
+        while True:
+            try:
+                context: InvocationContext = await self._queue.get()
+                logger.info(f"-- Processing query {context.invocation_id} --")
+
+                self._before_query(context)
+                final_response = ""
+                async for response in self._run_async(context):
+                    content = response.choices[0].delta.content
+                    if not content:
+                        continue
+
+                    final_response += content
+                    self._during_query(context, content)
+
+                self._after_query(context, final_response)
+                self._post_message_callbacks.pop(context.invocation_id, None)
+                break
+            except Exception as e:
+                logger.error(f"-- Error processing query {context.invocation_id} --", exc_info=True)
+                self._after_query(context, str(e))
+                self._post_message_callbacks.pop(context.invocation_id, None)
+                continue
+            except asyncio.CancelledError:
+                logger.info("-- query processing cancelled --")
+                break
+
+    async def _run_async(self, context: InvocationContext) -> AsyncGenerator[ModelResponse, None]:
+        """Run a completion query."""
+        response = await acompletion(
+            model=self._model,
+            messages=[self.system_prompt, context.message],
+            stream=True,
+            n=1,
+        )
+
+        async for chunk in response:
+            yield chunk
+
+    def __get_post_message_callback(self, context: InvocationContext) -> Callable:
+        """Get the post_message_callback for the query."""
+        post_message_callback = self._post_message_callbacks.get(context.invocation_id, None)
+        if not post_message_callback:
+            logger.warning(f"-- No post_message_callback found for query {context.invocation_id} --")
+            return None
+        return post_message_callback
+
+    # -- Events --
+
+    def _before_query(self, context: InvocationContext) -> None:
+        """Callback before the query is run."""
+        post_message_callback = self.__get_post_message_callback(context)
+        if not post_message_callback:
+            return
+        post_message_callback(AssistantResponseStart(invocation_id=context.invocation_id))
+        self._session_service.add_event(
+            invocation_id=context.invocation_id,
+            content=context.message,
+            session_id=context.session_id,
+        )
+
+    def _during_query(self, context: InvocationContext, content: str) -> None:
+        """Callback during the query is run."""
+        post_message_callback = self.__get_post_message_callback(context)
+        if not post_message_callback:
+            return
+        post_message_callback(
+            AssistantResponseUpdate(
+                invocation_id=context.invocation_id,
+                content=content,
+            )
+        )
+
+    def _after_query(self, context: InvocationContext, content: str) -> None:
+        """Callback after the query is run."""
+        post_message_callback = self.__get_post_message_callback(context)
+        if not post_message_callback:
+            return
+        post_message_callback(
+            AssistantResponseComplete(
+                invocation_id=context.invocation_id,
+                content=content
+            )
+        )
+        self._session_service.add_event(
+            invocation_id=context.invocation_id,
+            content={
+                "role": "assistant",
+                "content": content,
+            },
+            session_id=context.session_id,
+        )
+
+    def _before_tool_call(self, context: InvocationContext) -> None:
+        """Callback before a tool call is run."""
+        pass
+
+    def _after_tool_call(self, context: InvocationContext) -> None:
+        """Callback after a tool call is run."""
+        pass
+
+    def _on_tool_call_error(self, context: InvocationContext) -> None:
+        """Callback after a tool call is run."""
+        pass
