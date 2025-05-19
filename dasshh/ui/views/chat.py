@@ -1,11 +1,14 @@
+import json
 from typing import List
+
 from textual.containers import Horizontal, Vertical
 from textual.widget import Widget
 from textual.app import ComposeResult
 from textual import on
-from litellm.types.utils import Message, ChatCompletionMessageToolCall, Function
 
-from dasshh.data.session import SessionService, Session
+from dasshh.data.session import SessionService
+from dasshh.ui.dto import UISession, UIMessage, UIAction
+from dasshh.ui.utils import convert_session_obj
 from dasshh.core.logging import get_logger
 from dasshh.core.runtime import DasshhRuntime
 from dasshh.ui.components.chat import ChatPanel, HistoryPanel, ActionsPanel
@@ -90,32 +93,32 @@ class Chat(Widget):
     def _load_data(self) -> None:
         """Load previous sessions and chats."""
         # load recent session
-        recent_session: Session = (
+        recent_session_obj = (
             self.session_service.get_recent_session()
             or self.session_service.new_session()
         )
+        recent_session: UISession = convert_session_obj(recent_session_obj)
         self.current_session_id = recent_session.id
 
         # load history panel
-        all_sessions: List[Session] = self.session_service.list_sessions(include_events=True)
+        all_sessions: List[UISession] = [
+            convert_session_obj(session_obj)
+            for session_obj in self.session_service.list_sessions(include_events=True)
+        ]
         self.history_panel.load_sessions(all_sessions, current=self.current_session_id)
 
         # chat and actions panel
-        self._reset_chat()
+        self._reload_chat()
 
-    def _reset_chat(self) -> None:
-        """Reset current chat window"""
-        current_session: Session = self.session_service.get_session(session_id=self.current_session_id)
-        messages, actions = [Message(role="assistant", content=self.DEFAULT_GREETING)], []
-        for event in current_session.events:
-            if event.tool_calls:
-                actions.extend(event.tool_calls)
-            elif event.role == "tool":
-                actions.append(event)
-            else:
-                messages.append(event)
-        self.chat_panel.load_messages(messages)
-        self.actions_panel.load_actions(actions)
+    def _reload_chat(self) -> None:
+        """Reload current chat window"""
+        current_session: UISession = convert_session_obj(
+            self.session_service.get_session(session_id=self.current_session_id),
+            self.session_service.get_events(session_id=self.current_session_id)
+        )
+        current_session.messages.insert(0, UIMessage(role="user", content=self.DEFAULT_GREETING))
+        self.chat_panel.load_messages(current_session.messages)
+        self.actions_panel.load_actions(current_session.actions)
 
     # -- Handlers --
 
@@ -125,17 +128,17 @@ class Chat(Widget):
         self.current_session_id = event.session_id
         self.history_panel.set_current_session(self.current_session_id)
 
-        self._reset_chat()
+        self._reload_chat()
 
     @on(NewSession)
     def on_new_session(self, _: NewSession) -> None:
         """Handle when a new session is created."""
-        new_session: Session = self.session_service.new_session()
+        new_session: UISession = convert_session_obj(self.session_service.new_session())
         self.current_session_id = new_session.id
         self.history_panel.add_session(new_session)
         self.history_panel.set_current_session(self.current_session_id)
 
-        self._reset_chat()
+        self._reload_chat()
 
     @on(DeleteSession)
     def on_delete_session(self, event: DeleteSession) -> None:
@@ -153,7 +156,9 @@ class Chat(Widget):
         This is captured at the Chat level and forwards to runtime with this component's
         post_message, so all child components can receive assistant events.
         """
-        self.chat_panel.add_new_message(Message(role="user", content=event.message))
+        self.chat_panel.add_new_message(
+            message=UIMessage(role="user", content=event.message)
+        )
         current_session_widget = self.history_panel.get_history_item_widget(self.current_session_id)
         if current_session_widget:
             current_session_widget.detail = event.message
@@ -172,19 +177,29 @@ class Chat(Widget):
     # -- Assistant events --
 
     @on(AssistantResponseStart)
-    def on_assistant_response_start(self, _: AssistantResponseStart) -> None:
+    def on_assistant_response_start(self, event: AssistantResponseStart) -> None:
         """Handle when the assistant starts processing a response."""
-        self.chat_panel.add_new_message(Message(role="assistant", content=""))
+        self.chat_panel.add_new_message(
+            message=UIMessage(invocation_id=event.invocation_id, role="assistant", content="")
+        )
 
     @on(AssistantResponseUpdate)
     def on_assistant_response_update(self, event: AssistantResponseUpdate) -> None:
         """Handle when the assistant updates the response."""
-        self.chat_panel.update_assistant_message(content=event.content, final=False)
+        self.chat_panel.update_assistant_message(
+            invocation_id=event.invocation_id,
+            content=event.content,
+            final=False
+        )
 
     @on(AssistantResponseComplete)
     def on_assistant_response_complete(self, event: AssistantResponseComplete) -> None:
         """Handle when the assistant completes processing a response."""
-        self.chat_panel.update_assistant_message(content=event.content, final=True)
+        self.chat_panel.update_assistant_message(
+            invocation_id=event.invocation_id,
+            content=event.content,
+            final=True
+        )
 
     @on(AssistantResponseError)
     def on_assistant_response_error(self, event: AssistantResponseError) -> None:
@@ -195,14 +210,22 @@ class Chat(Widget):
     def on_assistant_tool_call_start(self, event: AssistantToolCallStart) -> None:
         """Handle when the assistant starts a tool call."""
         self.actions_panel.add_action(
-            ChatCompletionMessageToolCall(function=Function(name=event.tool_name, arguments=event.args))
+            UIAction(
+                tool_call_id=event.tool_call_id,
+                invocation_id=event.invocation_id,
+                name=event.tool_name,
+                args=json.dumps(json.loads(event.args), indent=2),
+                result=""
+            )
         )
 
     @on(AssistantToolCallComplete)
     def on_assistant_tool_call_complete(self, event: AssistantToolCallComplete) -> None:
         """Handle when the assistant completes a tool call."""
-        self.actions_panel.add_action(
-            Message(role="tool", content=event.result, name=event.tool_name)
+        self.actions_panel.update_action(
+            invocation_id=event.invocation_id,
+            tool_call_id=event.tool_call_id,
+            result=event.result
         )
 
     @on(AssistantToolCallError)

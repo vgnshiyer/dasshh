@@ -8,7 +8,7 @@ from textual import on
 
 from dasshh.ui.events import NewSession, DeleteSession
 from dasshh.ui.components.chat.history_item import HistoryItem, DeleteIcon
-from dasshh.data.session import Session
+from dasshh.ui.dto import UISession
 
 
 class HistoryPanel(Widget):
@@ -81,7 +81,7 @@ class HistoryPanel(Widget):
     """
 
     def compose(self) -> ComposeResult:
-        yield Static("Previous Sessions", id="history-header")
+        yield Static("Sessions", id="history-header")
         yield ScrollableContainer(id="history-container")
         yield Button("New Session", id="new-session")
 
@@ -107,7 +107,7 @@ class HistoryPanel(Widget):
                 item.remove()
                 break
 
-    def load_sessions(self, sessions: List[Session], current: str) -> None:
+    def load_sessions(self, sessions: List[UISession], current: str) -> None:
         """Load session history from a list of sessions."""
         container = self.query_one("#history-container", ScrollableContainer)
         container.remove_children()
@@ -126,7 +126,7 @@ class HistoryPanel(Widget):
             container.mount(history_item, delete_icon)
         container.scroll_end()
 
-    def add_session(self, session: Session) -> None:
+    def add_session(self, session: UISession) -> None:
         """Add a session to the history panel."""
         container = self.query_one("#history-container", ScrollableContainer)
         history_item = HistoryItem(

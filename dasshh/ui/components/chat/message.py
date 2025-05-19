@@ -29,8 +29,9 @@ class ChatMessage(Static):
 
     content: reactive[str] = reactive("", layout=True)
 
-    def __init__(self, role: str, content: str, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, invocation_id: str, role: str, content: str, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
+        self.invocation_id = invocation_id
         self.role = "you" if role == "user" else "assistant"
         self.content = content
 

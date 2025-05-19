@@ -5,7 +5,7 @@ from textual.widgets import Static
 from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
 from rich.text import Text
-from litellm.types.utils import Message
+from dasshh.ui.dto import UIMessage
 
 from dasshh.ui.components.chat.message import ChatMessage
 from dasshh.ui.components.chat.chat_input import ChatInput
@@ -44,9 +44,6 @@ class ChatPanel(Widget):
     }
     """
 
-    current_assistant_message: ChatMessage | None = None
-    """Store reference to current assistant message for streaming updates."""
-
     def compose(self) -> ComposeResult:
         yield Static("Chat", id="chat-header")
         yield ScrollableContainer(id="messages-container")
@@ -65,12 +62,11 @@ class ChatPanel(Widget):
         text.styles.text_align = "center"
         text.styles.margin = (1, 1, 1, 1)
         container.mount(text)
-        self.current_assistant_message = None
 
         chat_input = self.query_one(ChatInput)
         chat_input.disable()
 
-    def load_messages(self, messages: List[Message]) -> None:
+    def load_messages(self, messages: List[UIMessage]) -> None:
         """Load messages from a previous chat session."""
         container = self.query_one("#messages-container")
         container.remove_children()
@@ -79,27 +75,36 @@ class ChatPanel(Widget):
         chat_input = self.query_one(ChatInput)
         chat_input.enable()
 
-    def add_new_message(self, message: Message) -> None:
+    def add_new_message(self, message: UIMessage) -> None:
         """Add a new message to the chat history."""
         container = self.query_one("#messages-container")
         message_widget = ChatMessage(
+            invocation_id=message.invocation_id,
             role=message.role,
             content=message.content,
             classes="chat-message"
         )
         container.mount(message_widget)
-
-        if message.role == "assistant":
-            self.current_assistant_message = message_widget
         container.scroll_end()
 
-    def update_assistant_message(self, *, content: str, final: bool = False) -> None:
+    def update_assistant_message(self, *, invocation_id: str, content: str, final: bool = False) -> None:
         """Update the content of the most recent assistant message (used for streaming)."""
-        if final:
-            self.current_assistant_message.content = content
+        message_widget = self.get_message_widget(invocation_id)
+        if not message_widget:
+            return
 
-        if not final and self.current_assistant_message:
-            self.current_assistant_message.content += content
+        if final:
+            message_widget.content = content
+        else:
+            message_widget.content += content
 
         container = self.query_one("#messages-container")
         container.scroll_end()
+
+    def get_message_widget(self, invocation_id: str) -> ChatMessage | None:
+        """Get the message widget for a given invocation id."""
+        container = self.query_one("#messages-container")
+        for message in container.query(ChatMessage):
+            if message.invocation_id == invocation_id:
+                return message
+        return None
