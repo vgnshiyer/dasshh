@@ -84,9 +84,10 @@ class AssistantResponseError(Message):
 class AssistantToolCallStart(Message):
     """Event triggered when agent starts a tool call."""
 
-    def __init__(self, invocation_id: str, tool_name: str, args: dict):
+    def __init__(self, invocation_id: str, tool_call_id: str, tool_name: str, args: str):
         super().__init__()
         self.invocation_id = invocation_id
+        self.tool_call_id = tool_call_id
         self.tool_name = tool_name
         self.args = args
 
@@ -94,9 +95,10 @@ class AssistantToolCallStart(Message):
 class AssistantToolCallComplete(Message):
     """Event triggered when agent completes a tool call."""
 
-    def __init__(self, invocation_id: str, tool_name: str, result: dict):
+    def __init__(self, invocation_id: str, tool_call_id: str, tool_name: str, result: str):
         super().__init__()
         self.invocation_id = invocation_id
+        self.tool_call_id = tool_call_id
         self.tool_name = tool_name
         self.result = result
 
@@ -104,8 +106,9 @@ class AssistantToolCallComplete(Message):
 class AssistantToolCallError(Message):
     """Event triggered when agent encounters an error during a tool call."""
 
-    def __init__(self, invocation_id: str, tool_name: str, error: str):
+    def __init__(self, invocation_id: str, tool_call_id: str, tool_name: str, error: str):
         super().__init__()
         self.invocation_id = invocation_id
+        self.tool_call_id = tool_call_id
         self.tool_name = tool_name
         self.error = error
