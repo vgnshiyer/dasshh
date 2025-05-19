@@ -3,9 +3,9 @@ from textual.widget import Widget
 from textual.widgets import Static
 from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
-from litellm.types.utils import ChatCompletionMessageToolCall, Message
 
-from dasshh.ui.components.chat.action import Action, ActionResult
+from dasshh.ui.components.chat.action import Action
+from dasshh.ui.dto import UIAction
 
 
 class ActionsPanel(Widget):
@@ -26,7 +26,6 @@ class ActionsPanel(Widget):
 
         #actions-container {
             height: 1fr;
-            margin: 1;
         }
 
         ScrollableContainer {
@@ -52,28 +51,41 @@ class ActionsPanel(Widget):
         container = self.query_one("#actions-container")
         container.remove_children()
 
-    def load_actions(self, actions: List[ChatCompletionMessageToolCall | Message]):
+    def load_actions(self, actions: List[UIAction]):
         container = self.query_one("#actions-container", ScrollableContainer)
         container.remove_children()
         for action in actions:
             self.add_action(action)
+        container.scroll_end()
 
-    def add_action(self, action: ChatCompletionMessageToolCall | Message) -> None:
+    def add_action(self, action: UIAction) -> None:
         """Add a action to the actions panel."""
         container = self.query_one("#actions-container", ScrollableContainer)
-        if isinstance(action, ChatCompletionMessageToolCall):
-            action_widget = Action(
-                name=action.function.name,
-                args=action.function.arguments,
-            )
-            container.mount(action_widget)
-        elif isinstance(action, Message) and action.role == "tool":
-            action_widget = ActionResult(
-                name=action.name,
-                result=action.content,
-            )
-            container.mount(action_widget)
+        action_widget = Action(
+            invocation_id=action.invocation_id,
+            tool_call_id=action.tool_call_id,
+            name=action.name,
+            args=action.args,
+            result=action.result,
+        )
+        container.mount(action_widget)
         container.scroll_end()
+
+    def update_action(self, invocation_id: str, tool_call_id: str, result: str) -> None:
+        """Update an action in the actions panel."""
+        action_widget = self.get_action_widget(invocation_id, tool_call_id)
+        if action_widget:
+            action_widget.result = result
+            container = self.query_one("#actions-container", ScrollableContainer)
+            container.scroll_end()
+
+    def get_action_widget(self, invocation_id: str, tool_call_id: str) -> Action | None:
+        """Get an action widget by invocation id and tool call id."""
+        container = self.query_one("#actions-container", ScrollableContainer)
+        for action in container.query(Action):
+            if action.invocation_id == invocation_id and action.tool_call_id == tool_call_id:
+                return action
+        return None
 
     def handle_error(self, error: str) -> None:
         """Handle an error during an action by showing a toast notification."""
