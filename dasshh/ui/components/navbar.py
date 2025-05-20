@@ -39,11 +39,10 @@ class Logo(Static):
     DEFAULT_CSS = """
     Logo {
         color: $surface;
-        content-align: left middle;
+        content-align: center middle;
         text-style: italic bold;
         width: auto;
         height: 100%;
-        margin: 0 4 0 24;
         margin-top: -1;
     }
 
@@ -67,23 +66,27 @@ class Navbar(Container):
 
     DEFAULT_CSS = """
     Navbar {
+        content-align: center middle;
         layout: horizontal;
         background: $primary;
         width: 100%;
         height: 3;
     }
 
+    Navbar > #logo {
+        width: 1fr;
+        align: right middle;
+    }
+
     Navbar > #nav-items {
         width: 1fr;
         align: left middle;
-        margin-right: 12;
     }
     """
 
     def compose(self) -> ComposeResult:
         """Create the navbar items."""
-        yield Logo()
-
+        yield Logo(id="logo")
         with Horizontal(id="nav-items"):
             yield NavItem(route="chat", label="Chat", icon="󰭹", id="chat")
             yield NavItem(route="settings", label="Settings", icon="", id="settings")

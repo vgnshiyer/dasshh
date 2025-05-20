@@ -34,6 +34,7 @@ class ActionsPanel(Widget):
             scrollbar-corner-color: $background;
             scrollbar-size: 1 1;
             scrollbar-gutter: stable;
+            margin: 0 1;
         }
     }
     """
