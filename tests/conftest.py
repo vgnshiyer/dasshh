@@ -13,4 +13,4 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 def cli_runner():
     """Provide a click CLI test runner."""
     from click.testing import CliRunner
-    return CliRunner() 
+    return CliRunner()
