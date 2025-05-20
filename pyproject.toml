@@ -21,11 +21,13 @@ testpaths = ["tests"]
 python_files = "test_*.py"
 python_functions = "test_*"
 python_classes = "Test*"
+markers = ["asyncio: mark a test as an asyncio test"]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
 ]
 
 [tool.setuptools.packages.find]
