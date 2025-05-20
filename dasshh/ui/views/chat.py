@@ -7,7 +7,7 @@ from textual.app import ComposeResult
 from textual import on
 
 from dasshh.data.session import SessionService
-from dasshh.ui.dto import UISession, UIMessage, UIAction
+from dasshh.ui.types import UISession, UIMessage, UIAction
 from dasshh.ui.utils import convert_session_obj
 from dasshh.core.logging import get_logger
 from dasshh.core.runtime import DasshhRuntime

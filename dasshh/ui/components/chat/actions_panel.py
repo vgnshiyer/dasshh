@@ -5,7 +5,7 @@ from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
 
 from dasshh.ui.components.chat.action import Action
-from dasshh.ui.dto import UIAction
+from dasshh.ui.types import UIAction
 
 
 class ActionsPanel(Widget):

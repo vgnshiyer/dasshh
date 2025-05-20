@@ -8,7 +8,7 @@ from textual import on
 
 from dasshh.ui.events import NewSession, DeleteSession
 from dasshh.ui.components.chat.history_item import HistoryItem, DeleteIcon
-from dasshh.ui.dto import UISession
+from dasshh.ui.types import UISession
 
 
 class HistoryPanel(Widget):

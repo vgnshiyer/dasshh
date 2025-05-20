@@ -5,7 +5,7 @@ from textual.widgets import Static
 from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
 from rich.text import Text
-from dasshh.ui.dto import UIMessage
+from dasshh.ui.types import UIMessage
 
 from dasshh.ui.components.chat.message import ChatMessage
 from dasshh.ui.components.chat.chat_input import ChatInput
