@@ -18,6 +18,12 @@ class ChatInput(Widget):
         dock: bottom;
         width: 100%;
         height: 3;
+        text-overflow: ellipsis;
+
+        ScrollView {
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
     }
 
     #message-input {
