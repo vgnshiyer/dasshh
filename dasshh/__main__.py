@@ -1,4 +1,6 @@
 import click
+import time
+from rich.console import Console
 
 from dasshh.core.logging import setup_logging
 
@@ -35,14 +37,13 @@ def main(ctx, version: bool = False, log_file=None, debug=False) -> None:
         logger.debug(f"Version {__version__} requested")
         ctx.exit()
 
-    # if ctx.invoked_subcommand is None:
-    #     console = Console()
-    #     with console.status("Starting Dasshh 🗲 ", spinner="dots"):
-    #         from dasshh.ui.app import Dasshh
-    #         time.sleep(1.2)
-    #         console.clear()
+    if ctx.invoked_subcommand is None:
+        console = Console()
+        with console.status("Starting Dasshh 🗲 ", spinner="dots"):
+            time.sleep(1.2)
+            console.clear()
+            from dasshh.ui.app import Dasshh
 
-    from dasshh.ui.app import Dasshh
     app = Dasshh()
     app.run()
 
