@@ -64,14 +64,14 @@ class HistoryItem(Static):
         self,
         session_id: str,
         detail: str,
-        timestamp: datetime,
+        created_at: datetime,
         *args: Any,
         **kwargs: Any
     ) -> None:
         super().__init__(*args, **kwargs)
         self.session_id = session_id
         self.detail = detail
-        self.timestamp = timestamp
+        self.created_at = created_at
 
     def watch_selected(self, selected: bool) -> None:
         """Watch for changes to the selected state."""
@@ -87,7 +87,7 @@ class HistoryItem(Static):
     def render(self):
         truncated_detail = (self.detail[:40] + "...") if len(self.detail) > 40 else self.detail
 
-        local_timestamp = self.timestamp.replace(tzinfo=timezone.utc).astimezone(tz=None)
+        local_timestamp = self.created_at.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
         now = datetime.now()
         time_str = local_timestamp.strftime("%I:%M %p")

@@ -116,7 +116,7 @@ class HistoryPanel(Widget):
             history_item = HistoryItem(
                 session_id=session.id,
                 detail=session.detail,
-                timestamp=session.updated_at,
+                created_at=session.updated_at,
             )
             delete_icon = DeleteIcon(session_id=session.id)
             # Mark current session
@@ -132,7 +132,7 @@ class HistoryPanel(Widget):
         history_item = HistoryItem(
             session_id=session.id,
             detail=session.detail,
-            timestamp=session.updated_at,
+            created_at=session.updated_at,
         )
         delete_icon = DeleteIcon(session_id=session.id)
         container.mount(history_item, delete_icon)

@@ -23,7 +23,7 @@ class StorageEvent(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     invocation_id = Column(String)
     session_id = Column(String, ForeignKey("sessions.id"))
-    timestamp = Column(DateTime)
+    created_at = Column(DateTime)
     content = Column(JSON)
 
     session = relationship("StorageSession", back_populates="events")
