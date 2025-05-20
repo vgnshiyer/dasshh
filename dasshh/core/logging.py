@@ -15,8 +15,12 @@ def setup_logging(log_file=None, log_level=logging.INFO):
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
-    if log_level == logging.DEBUG:
-        litellm._turn_on_debug()
+    litellm_logger = litellm.verbose_logger
+    root_logger = logging.getLogger()
+
+    for handler in root_logger.handlers[:] + litellm_logger.handlers[:]:
+        litellm_logger.removeHandler(handler)
+        root_logger.removeHandler(handler)
 
     file_handler = RotatingFileHandler(
         log_file,
@@ -25,11 +29,10 @@ def setup_logging(log_file=None, log_level=logging.INFO):
         encoding="utf-8"
     )
     file_handler.setFormatter(formatter)
-
-    root_logger = logging.getLogger()
-    root_logger.setLevel(log_level)
     root_logger.addHandler(file_handler)
-
+    root_logger.setLevel(log_level)
+    litellm_logger.addHandler(file_handler)
+    litellm_logger.setLevel(log_level)
     logging.info(f"-- Dasshh logging initialized. Log file: {log_file} --")
 
 
