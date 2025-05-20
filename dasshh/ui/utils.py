@@ -1,7 +1,10 @@
 import json
+import os
 from typing import List
+from importlib import import_module
+
 from dasshh.data.models import StorageSession, StorageEvent
-from dasshh.ui.dto import (
+from dasshh.ui.types import (
     UISession,
     UIMessage,
     UIAction,
@@ -40,3 +43,13 @@ def convert_session_obj(session_obj: StorageSession, events: List[StorageEvent] 
         messages=messages,
         actions=list(actions.values()),
     )
+
+
+def load_tools(dir: str = "dasshh.apps") -> None:
+    """
+    Load all tools from the given directory.
+    """
+    fs_dir = dir.replace(".", "/")
+    for file in os.listdir(fs_dir):
+        if file.endswith(".py"):
+            import_module(f"{dir}.{file[:-3]}")

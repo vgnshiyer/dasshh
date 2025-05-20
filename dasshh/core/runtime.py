@@ -9,6 +9,7 @@ from litellm import acompletion
 from litellm.types.utils import ModelResponse, ChatCompletionDeltaToolCall
 from litellm.types.utils import Message
 
+from dasshh.core.registry import Registry
 from dasshh.data.session import SessionService
 from dasshh.ui.events import (
     AssistantResponseStart,
@@ -32,10 +33,6 @@ InvocationContext = namedtuple(
         "system_instruction"
     ]
 )
-
-
-# remove me later
-from test import get_current_weather, tools
 
 
 class DasshhRuntime:
@@ -164,7 +161,7 @@ class DasshhRuntime:
         response = await acompletion(
             model=self._model,
             messages=[self.system_prompt, context.message],
-            tools=tools,
+            tools=Registry().get_tool_declarations(),
             tool_choice="auto",
             stream=True,
             n=1,
@@ -195,9 +192,11 @@ class DasshhRuntime:
             tool_name = tool_call.function.name
             args = tool_call.function.arguments
             self._before_tool_call(context, tool_call_id, tool_name, args)
-            if tool_name == "get_current_weather":
-                result = get_current_weather(**json.loads(args))
-                await self._after_tool_call(context, tool_call_id, tool_name, result)
+            tool = Registry().get_tool(tool_name)
+            if not tool:
+                raise ValueError(f"Tool {tool_name} not found")
+            result = tool(**json.loads(args))
+            await self._after_tool_call(context, tool_call_id, tool_name, result)
 
     def __get_post_message_callback(self, context: InvocationContext) -> Callable:
         """Get the post_message_callback for the query."""

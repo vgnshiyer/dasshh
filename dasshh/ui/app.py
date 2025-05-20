@@ -5,6 +5,7 @@ from dasshh.ui.screens.main import MainScreen
 from dasshh.data.client import DBClient
 from dasshh.data.session import SessionService
 from dasshh.core.runtime import DasshhRuntime
+from dasshh.ui.utils import load_tools
 
 
 class Dasshh(App):
@@ -30,8 +31,8 @@ class Dasshh(App):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.session_service = SessionService(DBClient())
+        load_tools()
         self.runtime = DasshhRuntime(self.session_service)
-
         self.logger = logging.getLogger("dasshh.app")
         self.logger.debug("-- Dasshh 🗲 initialized --")
 
