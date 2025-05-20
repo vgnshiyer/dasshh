@@ -116,7 +116,7 @@ class Chat(Widget):
             self.session_service.get_session(session_id=self.current_session_id),
             self.session_service.get_events(session_id=self.current_session_id)
         )
-        current_session.messages.insert(0, UIMessage(role="user", content=self.DEFAULT_GREETING))
+        current_session.messages.insert(0, UIMessage(role="assistant", content=self.DEFAULT_GREETING))
         self.chat_panel.load_messages(current_session.messages)
         self.actions_panel.load_actions(current_session.actions)
 
