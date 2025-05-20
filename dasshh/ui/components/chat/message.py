@@ -32,7 +32,10 @@ class ChatMessage(Static):
     def __init__(self, invocation_id: str, role: str, content: str, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.invocation_id = invocation_id
-        self.role = "you" if role == "user" else "assistant"
+        if role == "user":
+            self.role = "you"
+        elif role == "assistant":
+            self.role = "dasshh"
         self.content = content
 
         # Add CSS class based on role
