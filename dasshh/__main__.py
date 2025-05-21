@@ -3,6 +3,7 @@ import time
 from rich.console import Console
 
 from dasshh.core.logging import setup_logging
+from dasshh.ui.utils import load_config, DEFAULT_CONFIG_PATH
 
 __version__ = "0.1.0"
 
@@ -44,8 +45,16 @@ def main(ctx, version: bool = False, log_file=None, debug=False) -> None:
             console.clear()
             from dasshh.ui.app import Dasshh
 
-    app = Dasshh()
-    app.run()
+        app = Dasshh()
+        app.run()
+
+
+@main.command()
+def init_config():
+    """Initialize the configuration file."""
+    load_config()
+    click.echo(f"Config file created at: {DEFAULT_CONFIG_PATH}")
+    click.echo("Please edit this file to set your model API key before starting the application.")
 
 
 if __name__ == "__main__":

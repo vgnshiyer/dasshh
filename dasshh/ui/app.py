@@ -39,7 +39,7 @@ class Dasshh(App):
         self.logger.debug("-- Dasshh 🗲 initialized --")
 
     async def on_mount(self):
-        self.theme = "solarized-light"
+        self.theme = "catppuccin-mocha"
         self.logger.debug("Pushing main screen")
         self.push_screen("main")
         await self.runtime.start()
