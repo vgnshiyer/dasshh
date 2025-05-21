@@ -8,6 +8,7 @@ dependencies = [
     "click>=8.2.0",
     "litellm>=1.69.3",
     "numpydoc>=1.8.0",
+    "psutil>=7.0.0",
     "sqlalchemy>=2.0.41",
     "textual>=3.2.0",
 ]
