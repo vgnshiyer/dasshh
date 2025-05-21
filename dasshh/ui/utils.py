@@ -1,9 +1,11 @@
 import json
 import os
+import sys
 import yaml
 from pathlib import Path
 from typing import List
 from importlib import import_module
+import importlib.resources as pkg_resources
 
 from dasshh.data.models import StorageSession, StorageEvent
 from dasshh.ui.types import (
@@ -11,16 +13,28 @@ from dasshh.ui.types import (
     UIMessage,
     UIAction,
 )
+from dasshh.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 DEFAULT_CONFIG_PATH = Path.home() / ".dasshh" / "config.yaml"
-DEFAULT_CONFIG = """
+try:
+    DASSHH_EXEC_PATH = str(Path(pkg_resources.files('dasshh')))
+except (ImportError, TypeError):
+    DASSHH_EXEC_PATH = str(Path(__file__).parent.parent)
+
+DEFAULT_TOOLS_PATH = str(Path(DASSHH_EXEC_PATH) / "apps")
+
+DEFAULT_CONFIG = f"""
 app:
   skip_summarization: false
   system_prompt:
+  tool_directories:
+    - {DEFAULT_TOOLS_PATH}
 
 model:
-  name: gpt-4
+  name: gemini/gemini-2.0-flash
   api_base:
   api_key:
   api_version:
@@ -65,16 +79,41 @@ def convert_session_obj(session_obj: StorageSession, events: List[StorageEvent] 
     )
 
 
-def load_tools(dir: str = "dasshh.apps") -> None:
+def load_tools() -> None:
     """
-    Load all tools from the given directory recursively.
+    Load all tools from the given directories recursively.
+
+    Args:
+        dirs: A list of directory paths to load tools from (absolute file paths).
+              If None, will use paths from config or fall back to default.
     """
-    fs_dir = dir.replace(".", "/")
-    for root, _, files in os.walk(fs_dir):
-        for file in files:
-            if file == "__init__.py":
-                module_path = os.path.join(root, file)[:-3].replace("/", ".")
-                import_module(module_path)
+    tool_dirs_config = get_from_config("app.tool_directories")
+    if tool_dirs_config:
+        dirs = tool_dirs_config
+    else:
+        dirs = [DEFAULT_TOOLS_PATH]
+
+    for dir_path in dirs:
+        if os.path.exists(dir_path):
+            for root, dirs, files in os.walk(dir_path):
+                if "__init__.py" in files:
+                    # Determine full module path
+                    rel_path = os.path.relpath(root, dir_path)
+                    if rel_path == ".":
+                        module_path = os.path.basename(dir_path)
+                        module_parent = os.path.dirname(dir_path)
+                    else:
+                        module_path = rel_path.replace(os.sep, ".")
+                        module_parent = dir_path
+
+                    if module_parent not in sys.path:
+                        sys.path.append(module_parent)
+
+                    try:
+                        import_module(module_path)
+                        logger.info(f"Imported module: {module_path}")
+                    except ImportError as e:
+                        logger.error(f"Failed to import {module_path}: {e}")
 
 
 def load_config() -> None:
@@ -86,11 +125,21 @@ def load_config() -> None:
     DEFAULT_CONFIG_PATH.write_text(DEFAULT_CONFIG)
 
 
-def get_from_config(key: str) -> dict | str | None:
+def get_from_config(key: str) -> dict | str | List | None:
     """Get a value from the configuration file."""
     if not DEFAULT_CONFIG_PATH.exists():
         return None
 
     with open(DEFAULT_CONFIG_PATH, "r") as f:
         config = yaml.safe_load(f)
+
+    if '.' in key:
+        parts = key.split('.')
+        curr = config
+        for part in parts:
+            if curr is None or part not in curr:
+                return None
+            curr = curr.get(part)
+        return curr
+
     return config.get(key, None)

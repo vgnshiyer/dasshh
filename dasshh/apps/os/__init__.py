@@ -1,4 +1,4 @@
-from dasshh.apps.os.file_operations import (
+from .file_operations import (
     current_directory,
     list_files,
     file_info,
@@ -8,23 +8,23 @@ from dasshh.apps.os.file_operations import (
     move_file
 )
 
-from dasshh.apps.os.system_info import (
+from .system_info import (
     system_info,
     cpu_info,
     memory_info,
     disk_info,
     network_info,
-    process_list
 )
 
-from dasshh.apps.os.process_management import (
+from .process_management import (
+    process_list,
     find_process,
     get_process_info,
     kill_process,
     run_command
 )
 
-from dasshh.apps.os.network_tools import (
+from .network_tools import (
     ping,
     get_ip_address,
     check_port,
@@ -49,9 +49,9 @@ __all__ = [
     'memory_info',
     'disk_info',
     'network_info',
-    'process_list',
 
     # Process management
+    'process_list',
     'find_process',
     'get_process_info',
     'kill_process',
