@@ -15,9 +15,11 @@ class NavItem(Static):
         width: auto;
         height: auto;
         padding: 0 2;
+        color: $text-muted;
     }
 
     NavItem:hover, NavItem.active {
+        color: $text;
         text-style: bold;
     }
     """

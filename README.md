@@ -1,8 +1,12 @@
-# *Dasshh* <img src="assets/logo.png" width="40" height="40" style="vertical-align: middle;">
+<div align="center">
+
+# 🗲 &nbsp; *Dasshh* &nbsp; 🗲
 
 ***An AI Agent on your terminal, to preserve your brain juice.***
 
 Dasshh is a terminal-based AI agent that allows you to interact with your computer using natural language.
+
+</div>
 
 ## ✨ Features 
 
@@ -10,6 +14,14 @@ Dasshh is a terminal-based AI agent that allows you to interact with your comput
 - Chat with your personal assistant on your terminal
 - Perform actions on your computer with plain English
 - Extensible with your own tools
+
+## 📸 Screenshots
+
+### Light Mode
+<img src="assets/demo.png" alt="Dasshh Demo" width="800">
+
+### Dark Mode
+<img src="assets/demo2.png" alt="Dasshh Demo2" width="800">
 
 ## 📦 Installation
 
