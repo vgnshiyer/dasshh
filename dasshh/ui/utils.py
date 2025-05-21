@@ -67,12 +67,14 @@ def convert_session_obj(session_obj: StorageSession, events: List[StorageEvent] 
 
 def load_tools(dir: str = "dasshh.apps") -> None:
     """
-    Load all tools from the given directory.
+    Load all tools from the given directory recursively.
     """
     fs_dir = dir.replace(".", "/")
-    for file in os.listdir(fs_dir):
-        if file.endswith(".py"):
-            import_module(f"{dir}.{file[:-3]}")
+    for root, _, files in os.walk(fs_dir):
+        for file in files:
+            if file == "__init__.py":
+                module_path = os.path.join(root, file)[:-3].replace("/", ".")
+                import_module(module_path)
 
 
 def load_config() -> None:

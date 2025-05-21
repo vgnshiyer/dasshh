@@ -42,21 +42,21 @@ class DasshhRuntime:
     """
 
     # -- Model settings --
-    _model: str = ""
+    model: str = ""
     """The model to use for the runtime."""
-    _api_base: str = ""
+    api_base: str = ""
     """The base URL for the API."""
-    _api_key: str = ""
+    api_key: str = ""
     """The API key to use for the runtime."""
-    _api_version: str = ""
+    api_version: str = ""
     """The API version to use for the runtime."""
-    _temperature: float = 1.0
+    temperature: float = 1.0
     """The temperature to use for the runtime."""
-    _top_p: float = 1.0
+    top_p: float = 1.0
     """The top_p to use for the runtime."""
-    _max_tokens: int | None = None
+    max_tokens: int | None = None
     """The max_tokens to use for the runtime."""
-    _max_completion_tokens: int | None = None
+    max_completion_tokens: int | None = None
     """The max_completion_tokens to use for the runtime."""
 
     # -- Dasshh settings --
@@ -77,7 +77,7 @@ class DasshhRuntime:
     """The system prompt for the runtime."""
     _default_error_response: str = "Sorry, I'm having trouble with that. Please try again later."
     """The default error response for the runtime."""
-    _skip_summarization: bool = False
+    skip_summarization: bool = False
     """Whether to skip summarization after a tool call."""
 
     def __init__(self, session_service: SessionService):
@@ -87,7 +87,7 @@ class DasshhRuntime:
 
         _skip_summarization = get_from_config("app.skip_summarization")
         if _skip_summarization:
-            self._skip_summarization = True
+            self.skip_summarization = True
 
         _system_prompt = get_from_config("app.system_prompt")
         if _system_prompt:
@@ -100,17 +100,17 @@ class DasshhRuntime:
         _model_config = get_from_config("model")
         if not _model_config:
             return
-        self._model = _model_config.get("name", "")
-        self._api_base = _model_config.get("api_base", "")
-        self._api_key = _model_config.get("api_key", "")
-        if not self._api_key:
+        self.model = _model_config.get("name", "")
+        self.api_base = _model_config.get("api_base", "")
+        self.api_key = _model_config.get("api_key", "")
+        if not self.api_key:
             raise ValueError("API key is not set")
 
-        self._api_version = _model_config.get("api_version", "")
-        self._temperature = _model_config.get("temperature", 1.0)
-        self._top_p = _model_config.get("top_p", 1.0)
-        self._max_tokens = _model_config.get("max_tokens", None)
-        self._max_completion_tokens = _model_config.get("max_completion_tokens", None)
+        self.api_version = _model_config.get("api_version", "")
+        self.temperature = _model_config.get("temperature", 1.0)
+        self.top_p = _model_config.get("top_p", 1.0)
+        self.max_tokens = _model_config.get("max_tokens", None)
+        self.max_completion_tokens = _model_config.get("max_completion_tokens", None)
 
     @property
     def system_prompt(self) -> dict:
@@ -211,14 +211,14 @@ class DasshhRuntime:
     async def _run_async(self, context: InvocationContext) -> AsyncGenerator[ModelResponse, None]:
         """Run a completion query."""
         response = await acompletion(
-            model=self._model,
-            base_url=self._api_base,
-            api_key=self._api_key,
-            api_version=self._api_version,
-            temperature=self._temperature,
-            top_p=self._top_p,
-            max_tokens=self._max_tokens,
-            max_completion_tokens=self._max_completion_tokens,
+            model=self.model,
+            base_url=self.api_base,
+            api_key=self.api_key,
+            api_version=self.api_version,
+            temperature=self.temperature,
+            top_p=self.top_p,
+            max_tokens=self.max_tokens,
+            max_completion_tokens=self.max_completion_tokens,
             messages=self._generate_prompt(context),
             tools=Registry().get_tool_declarations(),
             tool_choice="auto",
@@ -369,7 +369,7 @@ class DasshhRuntime:
             session_id=context.session_id,
         )
 
-        if not self._skip_summarization:
+        if not self.skip_summarization:
             await self._queue.put(
                 InvocationContext(
                     invocation_id=context.invocation_id,

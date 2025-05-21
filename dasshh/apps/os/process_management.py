@@ -6,6 +6,18 @@ from dasshh.core.tools.decorator import tool
 
 
 @tool
+def process_list() -> List[Dict]:
+    """
+    List all running processes with basic information.
+    """
+    processes = []
+    for proc in psutil.process_iter(['pid', 'name', 'username', 'memory_percent', 'cpu_percent']):
+        processes.append(proc.info)
+
+    return processes
+
+
+@tool
 def find_process(name: str) -> List[Dict]:
     """
     Find all processes matching a name pattern.
