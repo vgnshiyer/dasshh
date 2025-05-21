@@ -3,7 +3,7 @@ import json
 import logging
 import uuid
 from collections import namedtuple
-from typing import Callable, AsyncGenerator
+from typing import Callable, AsyncGenerator, List
 
 from litellm import acompletion
 from litellm.types.utils import ModelResponse, ChatCompletionDeltaToolCall
@@ -119,6 +119,13 @@ class DasshhRuntime:
             "content": self._system_prompt,
         }
 
+    def _generate_prompt(self, context: InvocationContext) -> List[dict]:
+        """Adds system prompt and session history to the message."""
+        prompt = [self.system_prompt]
+        for event in self._session_service.get_events(session_id=context.session_id):
+            prompt.append(event.content)  # current message is included in history already
+        return prompt
+
     async def start(self):
         """Start the runtime."""
         logger.info("-- Starting Dasshh runtime --")
@@ -212,7 +219,7 @@ class DasshhRuntime:
             top_p=self._top_p,
             max_tokens=self._max_tokens,
             max_completion_tokens=self._max_completion_tokens,
-            messages=[self.system_prompt, context.message],
+            messages=self._generate_prompt(context),
             tools=Registry().get_tool_declarations(),
             tool_choice="auto",
             stream=True,
