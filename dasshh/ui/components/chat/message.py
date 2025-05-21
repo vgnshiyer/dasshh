@@ -43,7 +43,7 @@ class ChatMessage(Static):
 
     def render(self):
         # Show typing indicator if the message is from assistant but empty
-        if self.role == "assistant" and not self.content:
+        if self.role == "dasshh" and not self.content:
             return Text("typing...", style="italic dim")
 
         role_icon = "󰀄" if self.role == "you" else "󱙺"
