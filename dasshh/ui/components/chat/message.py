@@ -26,6 +26,9 @@ class ChatMessage(Static):
         background: $surface 5%;
     }
     """
+    user_icon: str = "󰀄"
+    # assistant_icon: str = "󱙺"
+    assistant_icon: str = "🗲"
 
     content: reactive[str] = reactive("", layout=True)
 
@@ -46,7 +49,7 @@ class ChatMessage(Static):
         if self.role == "dasshh" and not self.content:
             return Text("typing...", style="italic dim")
 
-        role_icon = "󰀄" if self.role == "you" else "󱙺"
+        role_icon = self.user_icon if self.role == "you" else self.assistant_icon
         role_style = "bold cyan" if self.role == "you" else "bold green"
 
         title = Text(f"{role_icon} {self.role.capitalize()}", style=role_style)

@@ -27,7 +27,7 @@ except (ImportError, TypeError):
 DEFAULT_TOOLS_PATH = str(Path(DASSHH_EXEC_PATH) / "apps")
 
 DEFAULT_CONFIG = f"""
-app:
+dasshh:
   skip_summarization: false
   system_prompt:
   tool_directories:
@@ -87,7 +87,7 @@ def load_tools() -> None:
         dirs: A list of directory paths to load tools from (absolute file paths).
               If None, will use paths from config or fall back to default.
     """
-    tool_dirs_config = get_from_config("app.tool_directories")
+    tool_dirs_config = get_from_config("dasshh.tool_directories")
     if tool_dirs_config:
         dirs = tool_dirs_config
     else:

@@ -85,11 +85,11 @@ class DasshhRuntime:
         self._worker = None
         self._queue = asyncio.Queue()
 
-        _skip_summarization = get_from_config("app.skip_summarization")
+        _skip_summarization = get_from_config("dasshh.skip_summarization")
         if _skip_summarization:
             self.skip_summarization = True
 
-        _system_prompt = get_from_config("app.system_prompt")
+        _system_prompt = get_from_config("dasshh.system_prompt")
         if _system_prompt:
             self._system_prompt = _system_prompt
 
