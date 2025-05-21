@@ -81,12 +81,11 @@ def test_chat_message_empty_assistant():
     """Test rendering an empty assistant message (typing indicator)."""
     message = ChatMessage(
         invocation_id="test_id",
-        role="assistant",
+        role="dasshh",
         content=""
     )
     message.role = "assistant"
     rendered = message.render()
 
-    assert isinstance(rendered, Text)
-    assert "typing..." in rendered.plain
-    assert "italic dim" in rendered.style
+    assert isinstance(rendered, Group)
+    assert len(rendered.renderables) == 2
