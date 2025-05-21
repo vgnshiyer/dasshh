@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import noload
 
@@ -58,7 +58,7 @@ class SessionService:
         with self.db_client.get_db() as db:
             session = db.get(StorageSession, session_id)
             session.detail = detail
-            session.updated_at = datetime.now()
+            session.updated_at = datetime.now(timezone.utc)
             db.commit()
 
     def list_sessions(self, include_events: bool = False) -> list[StorageSession]:
