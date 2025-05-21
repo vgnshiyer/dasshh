@@ -1,1 +1,1 @@
-"""Tests for the chat components.""" 
+"""Tests for the chat components."""

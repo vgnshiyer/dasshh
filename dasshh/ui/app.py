@@ -5,7 +5,7 @@ from dasshh.ui.screens.main import MainScreen
 from dasshh.data.client import DBClient
 from dasshh.data.session import SessionService
 from dasshh.core.runtime import DasshhRuntime
-from dasshh.ui.utils import load_tools
+from dasshh.ui.utils import load_tools, load_config
 
 
 class Dasshh(App):
@@ -30,17 +30,19 @@ class Dasshh(App):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.session_service = SessionService(DBClient())
+        load_config()
         load_tools()
+
+        self.session_service = SessionService(DBClient())
         self.runtime = DasshhRuntime(self.session_service)
         self.logger = logging.getLogger("dasshh.app")
         self.logger.debug("-- Dasshh 🗲 initialized --")
 
     async def on_mount(self):
         self.theme = "solarized-light"
-        await self.runtime.start()
         self.logger.debug("Pushing main screen")
         self.push_screen("main")
+        await self.runtime.start()
 
     async def on_unmount(self):
         self.logger.debug("Application shutting down")
