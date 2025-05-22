@@ -8,6 +8,15 @@ Dasshh is a terminal-based AI agent that allows you to interact with your comput
 
 </div>
 
+<hr>
+
+[![PyPI](https://img.shields.io/pypi/v/dasshh.svg)](https://pypi.org/project/dasshh/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![](https://img.shields.io/badge/Follow-vgnshiyer-0A66C2?logo=linkedin)](https://www.linkedin.com/comm/mynetwork/discovery-see-all?usecase=PEOPLE_FOLLOWS&followMember=vgnshiyer)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow.svg?logo=buymeacoffee)](https://www.buymeacoffee.com/vgnshiyer)
+
+**Note:** This project is still in early development. Suggestions and contributions are welcome!
+
 ## ✨ Features 
 
 - Interactive & minimal chat UI
@@ -18,7 +27,7 @@ Dasshh is a terminal-based AI agent that allows you to interact with your comput
 ## 📸 Screenshots
 
 ### Light Mode
-<img src="assets/demo.png" alt="Dasshh Demo" width="800">
+<img src="assets/demo1.png" alt="Dasshh Demo" width="800">
 
 ### Dark Mode
 <img src="assets/demo2.png" alt="Dasshh Demo2" width="800">
@@ -55,6 +64,8 @@ model:
   api_key: YOUR_API_KEY_HERE
 ```
 
+Checkout [litellm docs](https://docs.litellm.ai/docs/providers) for detailed model configuration.
+
 ### Running the app
 
 ```bash
@@ -65,7 +76,7 @@ dasshh
 
 Contributions are welcome! Please open an issue with your suggestions or feature requests.
 
-## 🧰 Development
+## 🛠️ Development
 
 ### Clone the repository
 
