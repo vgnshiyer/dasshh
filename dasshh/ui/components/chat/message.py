@@ -16,14 +16,18 @@ class ChatMessage(Static):
         padding: 0 1;
     }
 
-    .you {
+    .user {
         border-left: thick $primary;
-        background: $surface 10%;
+        background: $background-lighten-1;
+        padding: 1;
+        margin: 1 5 1 1;
     }
 
     .assistant {
-        border-left: thick $secondary;
-        background: $surface 5%;
+        border-left: thick $accent;
+        background: $background-lighten-2;
+        padding: 1;
+        margin: 1 1 1 5;
     }
     """
     user_icon: str = "󰀄"
@@ -50,7 +54,7 @@ class ChatMessage(Static):
             return Text("typing...", style="italic dim")
 
         role_icon = self.user_icon if self.role == "you" else self.assistant_icon
-        role_style = "bold cyan" if self.role == "you" else "bold green"
+        role_style = "bold #ffff8d" if self.role == "you" else "bold #76ff03"
 
         title = Text(f"{role_icon} {self.role.capitalize()}", style=role_style)
         text = Markdown(self.content) if self.content else Text("")

@@ -33,6 +33,6 @@ class About(Widget):
                 "Designed to reduce cognitive load, Dasshh handles repetitive tasks "
                 "on your behalf so that you can focus on what truly matters.\n\n"
                 "The Goal: Prompt to Action!\n\n"
-                "Note: This project is under active development. Contributions are welcome! "
+                "Note: This project is under active development. Contributions are welcome!\n\n"
                 "Star it to show your support: https://github.com/vgnshiyer/dasshh",
             )

@@ -6,6 +6,7 @@ from dasshh.data.client import DBClient
 from dasshh.data.session import SessionService
 from dasshh.core.runtime import DasshhRuntime
 from dasshh.ui.utils import load_tools, load_config
+from dasshh.ui.theme import lime_theme
 
 
 class Dasshh(App):
@@ -39,7 +40,8 @@ class Dasshh(App):
         self.logger.debug("-- Dasshh 🗲 initialized --")
 
     async def on_mount(self):
-        self.theme = "catppuccin-mocha"
+        self.register_theme(lime_theme)
+        self.theme = "lime"
         self.logger.debug("Pushing main screen")
         self.push_screen("main")
         await self.runtime.start()

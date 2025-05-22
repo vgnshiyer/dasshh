@@ -18,8 +18,12 @@ class NavItem(Static):
         color: $text-muted;
     }
 
-    NavItem:hover, NavItem.active {
-        color: $text;
+    NavItem:hover {
+        color: $primary-lighten-1;
+    }
+
+    NavItem.active {
+        color: $primary-lighten-1;
         text-style: bold;
     }
     """
@@ -38,7 +42,7 @@ class Logo(Static):
 
     DEFAULT_CSS = """
     Logo {
-        color: $surface;
+        color: $primary;
         content-align: center middle;
         text-style: italic bold;
         width: auto;
@@ -47,7 +51,7 @@ class Logo(Static):
     }
 
     Logo:hover {
-        color: $surface-darken-1;
+        color: $primary-darken-1;
     }
     """
 
@@ -68,7 +72,7 @@ class Navbar(Container):
     Navbar {
         content-align: center middle;
         layout: horizontal;
-        background: $primary;
+        background: $background-lighten-1;
         width: 100%;
         height: 3;
     }

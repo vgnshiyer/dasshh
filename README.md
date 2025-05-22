@@ -26,11 +26,7 @@ Dasshh is a terminal-based AI agent that allows you to interact with your comput
 
 ## 📸 Screenshots
 
-### Light Mode
-<img src="assets/demo1.png" alt="Dasshh Demo" width="800">
-
-### Dark Mode
-<img src="assets/demo2.png" alt="Dasshh Demo2" width="800">
+<img src="assets/demo.png" alt="Dasshh Demo" width="800">
 
 ## 📦 Installation
 
@@ -71,6 +67,22 @@ Checkout [litellm docs](https://docs.litellm.ai/docs/providers) for detailed mod
 ```bash
 dasshh
 ```
+
+## 📖 Documentation
+
+The documentation is available at [https://vgnshiyer.github.io/dasshh/](https://vgnshiyer.github.io/dasshh/).
+
+### Running the docs locally
+
+```bash
+# Install dependencies
+uv pip install mkdocs-material
+
+# Serve the documentation
+mkdocs serve
+```
+
+Then visit [http://localhost:8000](http://localhost:8000) in your browser.
 
 ## 🤝 Contributing
 

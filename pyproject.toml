@@ -1,6 +1,6 @@
 [project]
 name = "dasshh"
-version = "0.1.0"
+version = "0.1.1"
 description = "An AI Agent on your terminal, to preserve your brain juice."
 readme = "README.md"
 license = { text = "MIT" }
@@ -33,6 +33,7 @@ dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-asyncio>=0.21.0",
+    "mkdocs-material>=9.6.0",
 ]
 
 [tool.setuptools.packages.find]
