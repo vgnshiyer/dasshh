@@ -15,7 +15,7 @@ class Action(Static):
         width: 100%;
         margin: 1 0;
         padding: 1;
-        border-left: thick $accent;
+        border-left: thick $success;
         background: $panel 15%;
     }
     """
@@ -24,7 +24,16 @@ class Action(Static):
     args: reactive[str] = reactive("", layout=True)
     result: reactive[str] = reactive("", layout=True)
 
-    def __init__(self, invocation_id: str, tool_call_id: str, name: str, args: str, result: str, *a: Any, **kw: Any) -> None:
+    def __init__(
+        self,
+        invocation_id: str,
+        tool_call_id: str,
+        name: str,
+        args: str,
+        result: str,
+        *a: Any,
+        **kw: Any,
+    ) -> None:
         super().__init__(*a, **kw)
         self.invocation_id = invocation_id
         self.tool_call_id = tool_call_id

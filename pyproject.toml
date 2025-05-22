@@ -1,6 +1,6 @@
 [project]
 name = "dasshh"
-version = "0.1.1"
+version = "0.1.2"
 description = "An AI Agent on your terminal, to preserve your brain juice."
 readme = "README.md"
 license = { text = "MIT" }

@@ -4,7 +4,7 @@
 
 ***An AI Agent on your terminal, to preserve your brain juice.***
 
-Dasshh is a terminal-based AI agent that allows you to interact with your computer using natural language.
+Dasshh is a tui built with [textual](https://textual.textualize.io/) that allows you to interact with your computer using natural language.
 
 </div>
 
