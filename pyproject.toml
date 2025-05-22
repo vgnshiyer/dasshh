@@ -1,8 +1,12 @@
 [project]
 name = "dasshh"
 version = "0.1.0"
-description = "Add your description here"
+description = "An AI Agent on your terminal, to preserve your brain juice."
 readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name="Vignesh Iyer", email="vgnshiyer@gmail.com" }
+]
 requires-python = ">=3.13"
 dependencies = [
     "click>=8.2.0",
