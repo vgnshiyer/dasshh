@@ -1,0 +1,82 @@
+site_name: Dasshh
+site_description: An AI Agent on your terminal, to preserve your brain juice
+site_url: https://vgnshiyer.github.io/dasshh/
+repo_url: https://github.com/vgnshiyer/dasshh
+repo_name: vgnshiyer/dasshh
+
+theme:
+  name: material
+  favicon: assets/favicon.png
+  logo: assets/logo.png
+  font:
+    text: Roboto Mono
+    code: Roboto Mono
+  palette:
+    # Dark mode (default)
+    - scheme: slate
+      primary: light green
+      accent: lime
+   
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.copy
+    - toc.integrate
+    - home.page
+
+# Custom CSS
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+
+plugins:
+  - search
+
+# Navigation structure
+nav:
+  - "": index.md
+  - Getting Started:
+    - Introduction: getting-started/introduction.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+  - Guide:
+    - Basics: guide/basics.md
+    - Configuration: guide/configuration.md
+    - Keybindings: guide/keybindings.md
+    - Abilities: guide/abilities.md
+    - Build your own tools: guide/own-tools.md
+  - API Reference:
+    - Runtime: api/runtime.md
+    - Tools: api/tools.md
+    - Data: api/data.md
+    - Events: api/events.md
+    - UI: api/ui.md 
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vgnshiyer/dasshh
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/vgnshiyer/
+    - icon: fontawesome/solid/blog
+      link: https://blog.vgnshiyer.dev

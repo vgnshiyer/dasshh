@@ -1,0 +1,271 @@
+/* Custom navbar gradient styling */
+.md-header {
+  transition: background 0.3s;
+}
+
+/* Optional: Change header text to be more visible on the gradient */
+.md-header__title {
+  color: white;
+  font-weight: 500;
+  font-size: 1.0rem;
+}
+
+/* Optional: Style navbar buttons to match the gradient theme */
+.md-header__button {
+  color: white;
+}
+
+/* Optional: Style the search box to match the theme */
+.md-search__form {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Style navbar tabs to blend with the gradient */
+.md-tabs {
+  background: linear-gradient(120deg, #76ff03, #64dd17);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth transition for hover effects */
+.md-header__button:hover, 
+.md-search__icon:hover,
+.md-tabs__link:hover {
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Roboto Mono", monospace;
+    font-weight: 700;
+    font-style: normal;
+    font-optical-sizing: auto;
+    color: #f0f0f0 !important;
+}
+
+/* Background gradient */
+body {
+    background-image: linear-gradient(
+        0deg,
+        hsl(93deg 33% 11%) 0%,
+        hsl(93deg 30% 9%) 20%,
+        hsl(93deg 29% 7%) 40%,
+        hsl(93deg 24% 4%) 60%,
+        hsl(93deg 30% 7%) 80%,
+        hsl(93deg 35% 12%) 90%,
+        hsl(93deg 58% 22%) 100%
+    );
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: auto;
+    border-color: hsl(93deg 100% 30%);
+}
+
+/* Code blocks */
+code {
+    background: hsla(93deg, 100%, 10%, 0.4) !important;
+    border: 1px solid hsl(93deg 100% 30%) !important;
+}
+
+/* Tables */
+table {
+    background: hsla(93deg, 100%, 10%, 0.4) !important;
+    border: 1px solid hsl(93deg 100% 30%) !important;
+}
+
+span.filename {
+    background: hsla(93deg, 100%, 10%, 0.4) !important;
+    border: 1px solid hsl(93deg 100% 30%) !important;
+    border-bottom: none !important;
+    color: hsla(93deg, 42%, 73%, 0.526) !important;
+}
+
+/* Navigation links */
+.md-nav__link {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.md-nav__link--active {
+    color: hsl(93deg, 72%, 66%) !important;
+}
+
+nav.md-nav.md-nav--secondary {
+    border-left-color: hsl(93deg, 72%, 66%) !important;
+}
+
+/* Make header transparent to blend with background */
+.md-header {
+    position: initial;
+    background-color: rgba(0,0,0,0);
+}
+
+.md-header--shadow {
+    box-shadow: none;
+}
+
+/* Custom tab styling */
+nav.md-tabs {
+    background: transparent !important;
+    box-shadow: none !important;
+    box-sizing: content-box;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.md-tabs__link {
+    color: #f0f0f0 !important;
+    opacity: 0.93;
+    font-size: 0.83rem;
+    position: relative;
+    text-decoration: none;
+}
+
+.md-tabs__link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 50%;
+    background-color: hsl(93deg, 72%, 66%);
+    transition: width 0.16s ease-out, left 0.16s ease-out;
+}
+
+.md-tabs__link:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.md-tabs__item--active {
+    font-weight: bold;
+}
+
+.md-tabs__item--active a {
+    text-decoration: none;
+    position: relative;
+}
+
+.md-tabs__item--active a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: hsl(93deg, 72%, 66%);
+    transition: all 0.16s ease-in-out;
+}
+
+.md-tabs__item--active a:hover::after {
+    height: 3px;
+    box-shadow: 0 0 5px hsl(93deg, 72%, 66%);
+}
+
+/* Content styling */
+.md-content {
+    background-color: rgba(0,0,0,0);
+    padding-bottom: 2.5rem;
+}
+
+.md-nav__title {
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+article p {
+    color: #f0f0f0;
+}
+
+p a {
+    color: hsl(93deg, 72%, 66%) !important;
+}
+
+a:hover {
+    color: hsl(93deg, 72%, 66%) !important;
+}
+
+/* Button styling */
+a.posting-button {
+    color: whitesmoke;
+    padding: 0.7rem 1.4rem;
+    background-color: hsl(93deg 100% 10%);
+    border: 3px solid hsl(93deg 100% 30%);
+    border-radius: 2px;
+    font-family: "Roboto Mono", monospace;
+}
+
+a.posting-button:hover {
+    color: whitesmoke;
+    font-weight: 600;
+    border: 3px solid rgba(140, 255, 100, 1);
+}
+
+/* Utility classes */
+.monospace {
+    font-family: "Roboto Mono", monospace;
+}
+
+/* Search results */
+.md-search__output mark {
+    color: hsl(93deg, 72%, 66%);
+}
+
+.md-search-result__more div {
+    color: hsl(93deg, 72%, 66%) !important;
+    opacity: 0.8;
+}
+
+/* Article layout */
+article {
+    max-width: 840px;
+    margin: 0 auto !important;
+    padding: 0 1rem;
+}
+
+article p mark {
+    background-color: rgba(140, 255, 100, 0.25) !important;
+}
+
+/* Footer styling */
+footer div.md-ellipsis {
+    font-family: "Roboto Mono", monospace;
+}
+
+/* Responsive layout */
+@media (min-width: 1220px) {
+    article {
+        margin: 0 0 !important;
+    }
+}
+
+/* Admonitions styling */
+.md-typeset .admonition,
+.md-typeset details {
+    border-color: hsl(93deg 100% 30%) !important;
+    background-color: hsla(93deg, 100%, 10%, 0.4) !important;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+    background-color: hsla(93deg, 100%, 20%, 0.4) !important;
+}
+
+/* Dark theme specific overrides */
+[data-md-color-scheme="slate"] {
+    --md-default-fg-color: #f0f0f0;
+    --md-default-fg-color--light: rgba(240, 240, 240, 0.8);
+    --md-default-fg-color--lighter: rgba(240, 240, 240, 0.6);
+    --md-default-fg-color--lightest: rgba(240, 240, 240, 0.4);
+    --md-default-bg-color: transparent;
+    --md-default-bg-color--light: transparent;
+    --md-default-bg-color--lighter: transparent;
+    --md-default-bg-color--lightest: transparent;
+    --md-primary-fg-color: hsl(93deg, 72%, 66%);
+    --md-accent-fg-color: hsl(93deg, 58%, 22%);
+    --md-accent-fg-color--transparent: hsla(93deg, 58%, 22%, 0.1);
+    --md-code-bg-color: hsla(93deg, 100%, 10%, 0.4);
+    --md-code-border-color: hsl(93deg 100% 30%);
+} 
