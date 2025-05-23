@@ -66,9 +66,10 @@ my_dasshh_tools/
 mkdir -p my_dasshh_tools/weather
 touch my_dasshh_tools/__init__.py
 touch my_dasshh_tools/weather/__init__.py
+touch my_dasshh_tools/weather/weather_tools.py
 ```
 
-### Step 2: Create your tool files
+### Step 2: Add your tools
 
 For example, in `my_dasshh_tools/weather/weather_tools.py`:
 
@@ -99,23 +100,20 @@ def get_weather(city: str) -> Dict:
         }
 ```
 
+!!! tip
+    Don't worry about your interpreter complaining about `dasshh.core.tools.decorator`. When you run dasshh from the global binary, it will be available during runtime.
+
 ### Step 3: Import your tools in the `__init__.py` files
-
-In `my_dasshh_tools/weather/__init__.py`:
-
-```python
-from .weather_tools import get_weather
-
-__all__ = ['get_weather']
-```
 
 In `my_dasshh_tools/__init__.py`:
 
 ```python
-from . import weather
+from .weather.weather_tools import myweather
 
-__all__ = ['weather']
+__all__ = ['myweather']
 ```
+
+The `__init__.py` inside the `weather/` directory can be empty. It is only used to indicate that the `weather/` directory is a package.
 
 ## Registering your tools with Dasshh
 
@@ -149,9 +147,7 @@ When creating your tools, follow these best practices:
 
 To test if your tools are being discovered, ask Dasshh to list all tools.
 
-```
-List all available tools
-```
+<img src="../../assets/tools.gif" alt="List Tools" style="width: 100%; height: 100%; border-radius: 4px; padding: 10px; border: 1.5px solid hsl(93deg 100% 30%)">
 
 If you see your tools listed, you're good to go!
 
