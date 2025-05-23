@@ -15,6 +15,40 @@
   color: white;
 }
 
+.md-sidebar,
+.md-sidebar__inner {
+    background-color: hsl(93deg 33% 11%);
+}
+
+.md-sidebar .md-nav {
+    background-color: hsl(93deg 33% 11%);
+}
+
+.md-sidebar .md-nav__item {
+    border: none;
+}
+
+@media screen and (min-width: 1220px) {
+    .md-sidebar {
+        margin-top: -1.5rem;
+    }
+
+    .md-sidebar,
+    .md-sidebar__inner,
+    .md-sidebar--primary,
+    .md-sidebar--secondary {
+        background-color: transparent;
+    }
+
+    .md-sidebar .md-nav {
+        background-color: transparent;
+    }
+
+    .md-sidebar .md-nav__item, .md-nav__title {
+        border: none;
+    }
+}
+
 /* Optional: Style the search box to match the theme */
 .md-search__form {
   background-color: rgba(255, 255, 255, 0.15);

@@ -16,6 +16,8 @@ With a focus on simplicity, Dasshh's chat interface is divided into three main p
 
 The Sessions Panel helps manage your conversation history.
 
+<img src="../../assets/sessions.png" alt="Sessions Panel" style="width: 25%; height: auto; border-radius: 4px; padding: 5px; border: 1.5px solid hsl(93deg 100% 30%); display: block; margin: 0 auto;">
+
 - Displays all your previous chat sessions
 - Allows you to switch between different conversations
 - Shows your last message on the session card
@@ -25,6 +27,8 @@ The Sessions Panel helps manage your conversation history.
 
 The Chat Panel is the main area where your conversation happens.
 
+<img src="../../assets/chat.png" alt="Chat Panel" style="width: 60%; height: auto; border-radius: 4px; padding: 5px; border: 1.5px solid hsl(93deg 100% 30%); display: block; margin: 0 auto;">
+
 - Shows the conversation history between you and the assistant
 - Displays your messages and the assistant's responses
 - Includes an input box at the bottom where you type your messages
@@ -32,6 +36,8 @@ The Chat Panel is the main area where your conversation happens.
 ### Actions Panel
 
 The Actions Panel shows detailed information about tools used by the assistant.
+
+<img src="../../assets/actions.png" alt="Actions Panel" style="width: 40%; height: auto; border-radius: 4px; padding: 5px; border: 1.5px solid hsl(93deg 100% 30%); display: block; margin: 0 auto;">
 
 - Lists all the tools called during the current session
 - Shows the parameters passed to each tool
