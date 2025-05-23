@@ -30,43 +30,78 @@ Dasshh is a tui built with [textual](https://textual.textualize.io/) that allows
 
 ## 📦 Installation
 
-### Using `uv`
+### Using `uv` (Recommended)
+
+If you haven't tried [uv](https://github.com/astral-sh/uv) yet, it's highly recommended for fast Python package management.
 
 ```bash
-brew install uv  # macOS
-uvx dasshh
+# Install uv on macOS
+brew install uv
+
+# Or using curl
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install dasshh
+uv tool install dasshh
 ```
 
-### Prefer `pipx`?
+### Using `pipx`
 
 ```bash
+# Install pipx if you haven't already
+pip install --user pipx
+pipx ensurepath
+
+# Install dasshh
 pipx install dasshh
 ```
 
-### Initial Setup
+### Verify Installation
 
-Before running the app, you need to initialize the configuration file:
+```bash
+dasshh --version
+```
+
+## 🚀 Quick Start
+
+### 1. Initialize Configuration
 
 ```bash
 dasshh init-config
 ```
 
-This will create a configuration file at `~/.dasshh/config.yaml`. You need to edit this file to set your API key and other preferences:
+This creates a config file at `~/.dasshh/config.yaml`.
+
+### 2. Configure Your Model
+
+Edit the config file to set your model and API key:
 
 ```yaml
-# Edit the file to set your model API key
 model:
   name: gemini/gemini-2.0-flash
-  api_key: YOUR_API_KEY_HERE
+  api_key: <your-google-AI-studio-api-key>
 ```
 
-Checkout [litellm docs](https://docs.litellm.ai/docs/providers) for detailed model configuration.
+> See [litellm docs](https://docs.litellm.ai/docs/providers) for all supported models and providers.
 
-### Running the app
+### 3. Launch Dasshh
 
 ```bash
 dasshh
 ```
+
+### 4. Start Chatting
+
+Ask Dasshh to help with system tasks:
+
+```
+• What's the current CPU usage?
+• Show me the top memory-intensive processes  
+• List files in my downloads folder
+• Create a new directory called "projects"
+```
+
+**Exit:** Press `Ctrl+C` to terminate.
 
 ## 📖 Documentation
 

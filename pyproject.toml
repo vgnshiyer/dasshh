@@ -7,6 +7,13 @@ license = { text = "MIT" }
 authors = [
     { name="Vignesh Iyer", email="vgnshiyer@gmail.com" }
 ]
+
+[project.urls]
+Documentation = "https://blog.vgnshiyer.dev/dasshh"
+Homepage = "https://github.com/vgnshiyer/dasshh"
+Repository = "https://github.com/vgnshiyer/dasshh"
+"Bug Tracker" = "https://github.com/vgnshiyer/dasshh/issues"
+
 requires-python = ">=3.13"
 dependencies = [
     "click>=8.2.0",
