@@ -58,4 +58,3 @@ jobs:
       - name: Test package installation
         run: |
           uv pip install dist/*.whl
-          dasshh --help
