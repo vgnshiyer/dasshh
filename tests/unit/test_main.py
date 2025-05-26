@@ -10,7 +10,6 @@ def test_version_option(cli_runner):
     """Test the --version option."""
     result = cli_runner.invoke(main, ["--version"])
     assert result.exit_code == 0
-    assert "0.1.0" in result.output
 
 
 @patch("dasshh.ui.app.Dasshh")

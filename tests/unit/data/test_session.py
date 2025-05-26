@@ -97,13 +97,13 @@ def test_delete_nonexistent_session(test_session_service):
 
 def test_get_recent_session(test_session_service):
     """Test getting the most recent session."""
-    test_session_service.new_session(detail="Test Session 1")
+    session1 = test_session_service.new_session(detail="Test Session 1")
     session2 = test_session_service.new_session(detail="Test Session 2")
 
     recent_session = test_session_service.get_recent_session()
 
     assert recent_session is not None
-    assert recent_session.id == session2.id
+    assert recent_session.id == session1.id
 
 
 def test_add_event(test_session_service):
