@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://blog.vgnshiyer.dev/dasshh
+    about: Check our documentation for answers to common questions
+  - name: 💬 Discussions
+    url: https://github.com/vgnshiyer/dasshh/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 🐦 Twitter
+    url: https://twitter.com/vgnshiyer
+    about: Follow for updates and announcements
+  - name: 💼 LinkedIn
+    url: https://www.linkedin.com/in/vgnshiyer/
+    about: Connect with the maintainer

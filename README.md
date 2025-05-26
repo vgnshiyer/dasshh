@@ -15,6 +15,8 @@ Dasshh is a tui built with [textual](https://textual.textualize.io/) that allows
 [![](https://img.shields.io/badge/Follow-vgnshiyer-0A66C2?logo=linkedin)](https://www.linkedin.com/comm/mynetwork/discovery-see-all?usecase=PEOPLE_FOLLOWS&followMember=vgnshiyer)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow.svg?logo=buymeacoffee)](https://www.buymeacoffee.com/vgnshiyer)
 
+<img src="assets/feature1.gif" alt="Dasshh Demo" width="800">
+
 **Note:** This project is still in early development. Suggestions and contributions are welcome!
 
 ## ✨ Features 
@@ -23,10 +25,6 @@ Dasshh is a tui built with [textual](https://textual.textualize.io/) that allows
 - Chat with your personal assistant on your terminal
 - Perform actions on your computer with plain English
 - Extensible with your own tools
-
-## 📸 Screenshots
-
-<img src="assets/demo.png" alt="Dasshh Demo" width="800">
 
 ## 📦 Installation
 
@@ -105,44 +103,16 @@ Ask Dasshh to help with system tasks:
 
 ## 📖 Documentation
 
-The documentation is available at [https://vgnshiyer.github.io/dasshh/](https://vgnshiyer.github.io/dasshh/).
-
-### Running the docs locally
-
-```bash
-# Install dependencies
-uv pip install mkdocs-material
-
-# Serve the documentation
-mkdocs serve
-```
-
-Then visit [http://localhost:8000](http://localhost:8000) in your browser.
+For comprehensive documentation, visit [https://vgnshiyer.github.io/dasshh/](https://vgnshiyer.github.io/dasshh/).
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please open an issue with your suggestions or feature requests.
+We welcome contributions! 🎉 
 
-## 🛠️ Development
-
-### Clone the repository
-
-```bash
-git clone https://github.com/vgnshiyer/dasshh.git
-cd dasshh
-```
-
-### Install dependencies
-
-```bash
-uv sync
-```
-
-### Run the app
-
-```bash
-python -m dasshh
-```
+- **Read our [Contributing Guide](CONTRIBUTING.md)** for development setup and guidelines
+- **Report bugs** using our [issue templates](.github/ISSUE_TEMPLATE/)
+- **Request features** or ask questions in our [discussions](https://github.com/vgnshiyer/dasshh/discussions)
+- **Improve documentation** - we appreciate all help!
 
 ## 📝 License
 
