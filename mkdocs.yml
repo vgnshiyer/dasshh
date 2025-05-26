@@ -65,6 +65,7 @@ nav:
     - Keybindings: guide/keybindings.md
     - Abilities: guide/abilities.md
     - Build your own tools: guide/own-tools.md
+  - Contributing: contributing/contributing.md
   - API Reference:
     - Runtime: api/runtime.md
     - Tools: api/tools.md

@@ -89,9 +89,10 @@ Dasshh is evolving rapidly and your feedback is essential to its development. Th
 
 - [Try it out](https://github.com/vgnshiyer/dasshh/releases) and share your experience
 - [Spread the word](https://twitter.com/intent/tweet?text=Check%20out%20Dasshh%20-%20an%20AI%20Agent%20for%20your%20terminal!%20%F0%9F%97%B2%20&url=https%3A%2F%2Fgithub.com%2Fvgnshiyer%2Fdasshh) about Dasshh
-- [Suggest features](https://github.com/vgnshiyer/dasshh/issues) or [report bugs](https://github.com/vgnshiyer/dasshh/issues)
-- [Share ideas](https://github.com/vgnshiyer/dasshh/issues) for new tools and integrations
-- [Contribute code](https://github.com/vgnshiyer/dasshh/pulls) through pull requests
+- [Suggest features](https://github.com/vgnshiyer/dasshh/issues/new?template=feature_request.md) or [report bugs](https://github.com/vgnshiyer/dasshh/issues/new?template=bug_report.md)
+- [Request a new tool](https://github.com/vgnshiyer/dasshh/issues/new?template=tool_request.md)
+- [Share ideas](https://github.com/vgnshiyer/dasshh/discussions) for new tools and integrations
+- [Start a discussion](https://github.com/vgnshiyer/dasshh/discussions) for questions
 
 Join us in building an AI assistant that truly understands how developers work in the terminal!
 

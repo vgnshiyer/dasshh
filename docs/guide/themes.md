@@ -55,3 +55,7 @@ Once you have registered a theme, you can toggle between themes using the `Ctrl+
 
 !!! tip
     For more information on theme variables, see the [Textual documentation](https://textual.textualize.io/guide/design/#theme-variables).
+
+## Requesting a new theme
+
+If you have a theme you'd like to see added to Dasshh, please [open an issue](https://github.com/vgnshiyer/dasshh/issues/new?template=theme_request.md) with your request.

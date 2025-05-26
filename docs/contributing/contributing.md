@@ -1,94 +1,245 @@
-# Contributing to Dasshh
+# Contributing to dasshh
 
-Thank you for your interest in contributing to Dasshh! This guide will help you get started with the development process.
+Thank you for your interest in contributing to dasshh! 🎉
 
-## Setting Up the Development Environment
+This guide will help you get started with contributing to the project.
 
-1. Clone the repository:
+## Table of Contents
 
-```bash
-git clone https://github.com/vgnshiyer/dasshh.git
-cd dasshh
-```
+- [Code of Conduct](#code-of-conduct)
+- [Getting Started](#getting-started)
+- [Development Setup](#development-setup)
+- [Development Workflow](#development-workflow)
+- [Testing](#testing)
+- [Code Style](#code-style)
+- [Pull Request Process](#pull-request-process)
+- [Issue Reporting](#issue-reporting)
+- [Documentation](#documentation)
 
-2. Create a virtual environment:
+## Code of Conduct
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
+By participating in this project, you agree to abide by our Code of Conduct. Please be respectful and constructive in all interactions.
 
-3. Install development dependencies:
+## Getting Started
 
-```bash
-uv sync
-```
+### Prerequisites
 
-## Running Dasshh in Development Mode
+- Python 3.13 or higher
+- [uv](https://docs.astral.sh/uv/) package manager
+- Git
 
-To run Dasshh locally during development:
+### Fork and Clone
 
-```bash
-python -m dasshh
-```
+1. Fork the repository on GitHub
+2. Clone your fork locally:
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/dasshh.git
+   cd dasshh
+   ```
+
+## Development Setup
+
+1. **Install uv** (if not already installed):
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
+2. **Create and activate virtual environment**:
+   ```bash
+   uv venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+3. **Install development dependencies**:
+   ```bash
+   uv sync
+   ```
+
+4. **Running the application**:
+   ```bash
+   python -m dasshh
+   ```
 
 ## Development Workflow
 
-1. Create a new branch for your feature or bugfix:
+### Branch Strategy
 
-```bash
-git checkout -b feature/your-feature-name
+- `main` - Production-ready code
+- `feature/feature-name` - New features
+- `bugfix/issue-description` - Bug fixes
+- `docs/update-description` - Documentation updates
+
+### Making Changes
+
+1. **Create a new branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make your changes** following the project conventions
+
+3. **Run tests locally**:
+   ```bash
+   uv run pytest tests/ -v --cov=dasshh --cov-report=html
+   ```
+
+4. **Run linting** (if configured):
+   ```bash
+   uv pip install ruff
+   ruff check .
+   ruff format .
+   ```
+
+5. **Commit your changes**:
+   ```bash
+   git add .
+   git commit -m "feat: add your feature description"
+   ```
+
+### Commit Message Convention
+
+We follow conventional commit format:
+
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `docs:` - Documentation changes
+- `test:` - Test additions or modifications
+- `refactor:` - Code refactoring
+- `chore:` - Maintenance tasks
+
+Examples:
 ```
-
-2. Make your changes and test them locally.
-
-3. Run the tests to ensure everything works:
-
-```bash
-pytest
+feat: add new command for file analysis
+fix: resolve issue with terminal output formatting
+docs: update installation instructions
+test: add unit tests for config parser
 ```
-
-4. Commit your changes with a descriptive message:
-
-```bash
-git add .
-git commit -m "Add your descriptive message here"
-```
-
-5. Push your branch and create a pull request:
-
-```bash
-git push origin feature/your-feature-name
-```
-
-Then, create a pull request on GitHub.
-
-## Code Style
-
-Dasshh follows the PEP 8 style guide for Python code. Please ensure your code adheres to this standard.
 
 ## Testing
 
-All new features should include appropriate test coverage. Run the test suite using:
+### Running Tests
 
 ```bash
-pytest
+# Run all tests
+uv run pytest
+
+# Run tests with coverage
+uv run pytest --cov=dasshh --cov-report=html
+
+# Run specific test file
+uv run pytest tests/unit/test_specific.py
+
+# Run tests in verbose mode
+uv run pytest -v
 ```
 
-To run tests with coverage:
+### Writing Tests
+
+- Place tests in the `tests/` directory
+- Use descriptive test names: `test_should_parse_config_when_valid_file_provided`
+- Follow AAA pattern: Arrange, Act, Assert
+- Mock external dependencies
+
+Example test structure:
+```python
+def test_should_process_command_when_valid_input_provided():
+    # Arrange
+    command = "test command"
+    expected_result = "processed"
+    
+    # Act
+    result = process_command(command)
+    
+    # Assert
+    assert result == expected_result
+```
+
+## Code Style
+
+### Python Style Guidelines
+
+- Follow [PEP 8](https://pep8.org/)
+- Use type hints where appropriate
+- Write docstrings for public functions and classes
+- Keep functions small and focused
+- Use descriptive variable names
+
+### Code Formatting
+
+We recommend using `ruff` for formatting:
 
 ```bash
-pytest --cov=dasshh
+# Install ruff
+uv pip install ruff
+
+# Format code
+ruff format .
+
+# Check for issues
+ruff check .
 ```
+
+## Pull Request Process
+
+1. **Ensure your branch is up to date**:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout your-feature-branch
+   git rebase main
+   ```
+
+2. **Push your branch**:
+   ```bash
+   git push origin your-feature-branch
+   ```
+
+3. **Create a Pull Request** on GitHub with:
+   - Clear title and description
+   - Reference any related issues
+   - Include screenshots/demos if relevant
+   - Ensure all CI checks pass
+
+4. **Address review feedback** promptly and respectfully
+
+5. **Squash commits** if requested before merging
+
+## Issue Reporting
+
+When reporting issues, please include:
+
+- **Environment details**: OS, Python version, dasshh version
+- **Steps to reproduce** the issue
+- **Expected vs actual behavior**
+- **Error messages** or logs
+- **Screenshots** if relevant
 
 ## Documentation
 
-When adding new features, please update the documentation accordingly. Dasshh uses MkDocs for documentation.
-
-To preview the documentation locally:
+### Building Documentation
 
 ```bash
+# Install documentation dependencies
+uv pip install mkdocs-material
+
+# Serve documentation locally
 mkdocs serve
+
+# Build documentation
+mkdocs build
 ```
 
-Then visit `http://localhost:8000` in your browser. 
+## Getting Help
+
+- Check the [documentation](https://blog.vgnshiyer.dev/dasshh)
+- [Open an issue](https://github.com/vgnshiyer/dasshh/issues) for bugs
+- [Start a discussion](https://github.com/vgnshiyer/dasshh/discussions) for questions
+- Contact maintainers at vgnshiyer@gmail.com or via [LinkedIn](https://www.linkedin.com/in/vgnshiyer/)
+
+## Recognition
+
+Contributors will be acknowledged in:
+- Release notes
+- GitHub contributors page
+
+Thank you for contributing to dasshh!

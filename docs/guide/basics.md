@@ -62,6 +62,10 @@ Tools are nothing but the functions that the AI assistant can use to perform act
 
 Additionally, Dasshh allows you to build your own tools. You can find the guide [here](own-tools.md).
 
+### Requesting a new tool
+
+If you have a tool you'd like to see added to Dasshh, please [open an issue](https://github.com/vgnshiyer/dasshh/issues/new?template=tool_request.md) with your request.
+
 **Future Plans**
 
 - MCP support
