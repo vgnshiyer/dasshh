@@ -30,13 +30,15 @@ def list_files(directory: str) -> List[Dict]:
     for item in os.listdir(directory):
         path = os.path.join(directory, item)
         stat = os.stat(path)
-        files.append({
-            "name": item,
-            "path": path,
-            "size": stat.st_size,
-            "is_dir": os.path.isdir(path),
-            "modified": datetime.fromtimestamp(stat.st_mtime).isoformat()
-        })
+        files.append(
+            {
+                "name": item,
+                "path": path,
+                "size": stat.st_size,
+                "is_dir": os.path.isdir(path),
+                "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+            }
+        )
     return files
 
 
@@ -61,7 +63,7 @@ def file_info(path: str) -> Dict:
         "created": datetime.fromtimestamp(stat.st_ctime).isoformat(),
         "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
         "accessed": datetime.fromtimestamp(stat.st_atime).isoformat(),
-        "permissions": oct(stat.st_mode)[-3:]
+        "permissions": oct(stat.st_mode)[-3:],
     }
 
 
@@ -75,7 +77,7 @@ def read_file(path: str) -> Dict:
     if not os.path.exists(path):
         return {"error": f"Path '{path}' does not exist"}
 
-    with open(path, 'r') as file:
+    with open(path, "r") as file:
         return file.read()
 
 

@@ -1,6 +1,7 @@
 """
 Test fixtures for the data module.
 """
+
 import os
 import tempfile
 import pytest
@@ -25,6 +26,7 @@ def test_db_file():
 @pytest.fixture
 def test_db_client(monkeypatch, test_db_file):
     """Create a test database client with a temporary database."""
+
     class TestDBClient(DBClient):
         def __init__(self, db_path):
             self.db_path = db_path

@@ -1,1 +1,1 @@
-"""Tests for the UI module.""" 
+"""Tests for the UI module."""

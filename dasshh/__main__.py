@@ -54,7 +54,9 @@ def init_config():
     """Initialize the configuration file."""
     load_config()
     click.echo(f"Config file created at: {DEFAULT_CONFIG_PATH}")
-    click.echo("Please edit this file to set your model API key before starting the application.")
+    click.echo(
+        "Please edit this file to set your model API key before starting the application."
+    )
 
 
 if __name__ == "__main__":

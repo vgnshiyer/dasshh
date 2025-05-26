@@ -35,7 +35,7 @@ def cpu_info() -> Dict:
         "total_cores": cpu_count,
         "usage_per_core": cpu_percent,
         "total_usage": sum(cpu_percent) / len(cpu_percent),
-        "frequency": psutil.cpu_freq()._asdict() if psutil.cpu_freq() else None
+        "frequency": psutil.cpu_freq()._asdict() if psutil.cpu_freq() else None,
     }
 
 
@@ -54,7 +54,7 @@ def memory_info() -> Dict:
         "percent": mem.percent,
         "swap_total": swap.total,
         "swap_used": swap.used,
-        "swap_percent": swap.percent
+        "swap_percent": swap.percent,
     }
 
 
@@ -70,7 +70,7 @@ def disk_info(path: str = "/") -> Dict:
         "total": disk.total,
         "used": disk.used,
         "free": disk.free,
-        "percent": disk.percent
+        "percent": disk.percent,
     }
 
 
@@ -86,7 +86,9 @@ def network_info() -> Dict:
     for interface, addresses in interfaces.items():
         result[interface] = {
             "addresses": [addr._asdict() for addr in addresses],
-            "stats": io_counters.get(interface)._asdict() if interface in io_counters else None
+            "stats": io_counters.get(interface)._asdict()
+            if interface in io_counters
+            else None,
         }
 
     return result

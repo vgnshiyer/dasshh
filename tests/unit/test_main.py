@@ -1,6 +1,7 @@
 """
 Tests for the main CLI entry point.
 """
+
 from unittest.mock import patch
 
 from dasshh.__main__ import main

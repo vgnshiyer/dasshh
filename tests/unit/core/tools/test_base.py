@@ -1,6 +1,7 @@
 """
 Tests for the base tool class.
 """
+
 import pytest
 
 from dasshh.core.tools.base import BaseTool
@@ -8,6 +9,7 @@ from dasshh.core.tools.base import BaseTool
 
 class TestTool(BaseTool):
     """Test implementation of BaseTool."""
+
     def __init__(self, name="test_tool", description="Test tool", parameters=None):
         parameters = parameters or {"type": "object", "properties": {}}
         super().__init__(name, description, parameters)
@@ -21,8 +23,8 @@ class TestTool(BaseTool):
             "function": {
                 "name": self.name,
                 "description": self.description,
-                "parameters": self.parameters
-            }
+                "parameters": self.parameters,
+            },
         }
 
 
@@ -44,7 +46,7 @@ def test_base_tool_call_not_implemented():
     tool = BaseTool(
         name="base_tool",
         description="Base tool for testing",
-        parameters={"type": "object", "properties": {}}
+        parameters={"type": "object", "properties": {}},
     )
 
     with pytest.raises(NotImplementedError, match="This tool has no implementation"):
@@ -56,7 +58,7 @@ def test_base_tool_get_declaration_not_implemented():
     tool = BaseTool(
         name="base_tool",
         description="Base tool for testing",
-        parameters={"type": "object", "properties": {}}
+        parameters={"type": "object", "properties": {}},
     )
 
     with pytest.raises(NotImplementedError, match="This tool has no implementation"):

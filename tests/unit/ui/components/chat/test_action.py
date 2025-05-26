@@ -1,4 +1,5 @@
 """Tests for the Action component."""
+
 from unittest.mock import MagicMock, patch, PropertyMock
 
 from rich.console import Group
@@ -15,7 +16,7 @@ def test_action_initialization():
         tool_call_id="test_tool_call",
         name="test_tool",
         args='{"param": "value"}',
-        result='{"result": "success"}'
+        result='{"result": "success"}',
     )
 
     assert action.invocation_id == "test_invocation"
@@ -25,8 +26,8 @@ def test_action_initialization():
     assert action.result == '{"result": "success"}'
 
 
-@patch('dasshh.ui.components.chat.action.Syntax')
-@patch.object(Action, 'app', new_callable=PropertyMock)
+@patch("dasshh.ui.components.chat.action.Syntax")
+@patch.object(Action, "app", new_callable=PropertyMock)
 def test_action_render_with_result(mock_app_prop, mock_syntax):
     """Test rendering an action with a result."""
     mock_app = MagicMock()
@@ -42,7 +43,7 @@ def test_action_render_with_result(mock_app_prop, mock_syntax):
         tool_call_id="test_tool_call",
         name="test_tool",
         args='{"param": "value"}',
-        result='{"result": "success"}'
+        result='{"result": "success"}',
     )
 
     rendered = action.render()
@@ -73,8 +74,8 @@ def test_action_render_with_result(mock_app_prop, mock_syntax):
     assert rendered.renderables[4] == mock_result_syntax
 
 
-@patch('dasshh.ui.components.chat.action.Syntax')
-@patch.object(Action, 'app', new_callable=PropertyMock)
+@patch("dasshh.ui.components.chat.action.Syntax")
+@patch.object(Action, "app", new_callable=PropertyMock)
 def test_action_render_without_result(mock_app_prop, mock_syntax):
     """Test rendering an action without a result."""
     mock_app = MagicMock()
@@ -88,16 +89,13 @@ def test_action_render_without_result(mock_app_prop, mock_syntax):
         tool_call_id="test_tool_call",
         name="test_tool",
         args='{"param": "value"}',
-        result=''
+        result="",
     )
 
     rendered = action.render()
 
     mock_syntax.assert_called_once_with(
-        '{"param": "value"}',
-        "json",
-        background_color="#123456",
-        word_wrap=True
+        '{"param": "value"}', "json", background_color="#123456", word_wrap=True
     )
 
     assert isinstance(rendered, Group)

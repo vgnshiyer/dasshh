@@ -11,7 +11,9 @@ def process_list() -> List[Dict]:
     List all running processes with basic information.
     """
     processes = []
-    for proc in psutil.process_iter(['pid', 'name', 'username', 'memory_percent', 'cpu_percent']):
+    for proc in psutil.process_iter(
+        ["pid", "name", "username", "memory_percent", "cpu_percent"]
+    ):
         processes.append(proc.info)
 
     return processes
@@ -26,8 +28,8 @@ def find_process(name: str) -> List[Dict]:
         name (str): The name pattern to search for.
     """
     matching_processes = []
-    for proc in psutil.process_iter(['pid', 'name', 'username', 'cmdline']):
-        if name.lower() in proc.info['name'].lower():
+    for proc in psutil.process_iter(["pid", "name", "username", "cmdline"]):
+        if name.lower() in proc.info["name"].lower():
             matching_processes.append(proc.info)
     return matching_processes
 
@@ -54,7 +56,7 @@ def get_process_info(pid: int) -> Dict:
             "cpu_percent": proc.cpu_percent(interval=0.1),
             "num_threads": proc.num_threads(),
             "open_files": [f._asdict() for f in proc.open_files()],
-            "connections": [c._asdict() for c in proc.connections()]
+            "connections": [c._asdict() for c in proc.connections()],
         }
     except psutil.NoSuchProcess:
         return {"error": f"No process with PID {pid} found"}
@@ -81,9 +83,19 @@ def kill_process(pid: int) -> Dict:
         if still_alive:
             # If still alive, kill it more forcefully
             proc.kill()
-            return {"success": True, "pid": pid, "name": proc_name, "force_killed": True}
+            return {
+                "success": True,
+                "pid": pid,
+                "name": proc_name,
+                "force_killed": True,
+            }
         else:
-            return {"success": True, "pid": pid, "name": proc_name, "force_killed": False}
+            return {
+                "success": True,
+                "pid": pid,
+                "name": proc_name,
+                "force_killed": False,
+            }
     except psutil.NoSuchProcess:
         return {"error": f"No process with PID {pid} found"}
     except psutil.AccessDenied:
@@ -101,11 +113,7 @@ def run_command(command: str, timeout: Optional[int] = None) -> Dict:
     """
     try:
         result = subprocess.run(
-            command,
-            shell=True,
-            capture_output=True,
-            text=True,
-            timeout=timeout
+            command, shell=True, capture_output=True, text=True, timeout=timeout
         )
 
         return {
@@ -113,17 +121,13 @@ def run_command(command: str, timeout: Optional[int] = None) -> Dict:
             "success": result.returncode == 0,
             "return_code": result.returncode,
             "stdout": result.stdout,
-            "stderr": result.stderr
+            "stderr": result.stderr,
         }
     except subprocess.TimeoutExpired:
         return {
             "command": command,
             "success": False,
-            "error": f"Command timed out after {timeout} seconds"
+            "error": f"Command timed out after {timeout} seconds",
         }
     except Exception as e:
-        return {
-            "command": command,
-            "success": False,
-            "error": str(e)
-        }
+        return {"command": command, "success": False, "error": str(e)}

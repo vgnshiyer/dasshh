@@ -44,20 +44,17 @@ class Action(Static):
     def render(self):
         tool_call_title = Text(f"󰓦 Using tool: {self.name}", style="bold green")
         panel_color = self.app.get_css_variables().get("panel", "")
-        args_syntax = Syntax(self.args, "json", background_color=panel_color, word_wrap=True)
+        args_syntax = Syntax(
+            self.args, "json", background_color=panel_color, word_wrap=True
+        )
 
         if self.result:
             result_title = Text(f"󰄬 Result: {self.name}", style="bold blue")
-            result_syntax = Syntax(self.result, "json", background_color=panel_color, word_wrap=True)
+            result_syntax = Syntax(
+                self.result, "json", background_color=panel_color, word_wrap=True
+            )
             return Group(
-                tool_call_title,
-                args_syntax,
-                Text(""),
-                result_title,
-                result_syntax
+                tool_call_title, args_syntax, Text(""), result_title, result_syntax
             )
         else:
-            return Group(
-                tool_call_title,
-                args_syntax
-            )
+            return Group(tool_call_title, args_syntax)

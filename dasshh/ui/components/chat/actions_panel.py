@@ -84,7 +84,10 @@ class ActionsPanel(Widget):
         """Get an action widget by invocation id and tool call id."""
         container = self.query_one("#actions-container", ScrollableContainer)
         for action in container.query(Action):
-            if action.invocation_id == invocation_id and action.tool_call_id == tool_call_id:
+            if (
+                action.invocation_id == invocation_id
+                and action.tool_call_id == tool_call_id
+            ):
                 return action
         return None
 

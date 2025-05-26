@@ -1,6 +1,7 @@
 """
 Tests for the tool decorator.
 """
+
 from unittest.mock import patch, MagicMock
 
 from dasshh.core.tools.decorator import tool

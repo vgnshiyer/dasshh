@@ -1,1 +1,1 @@
-"""Tests for the UI components.""" 
+"""Tests for the UI components."""

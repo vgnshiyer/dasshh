@@ -1,6 +1,7 @@
 """
 Tests for the runtime module.
 """
+
 import asyncio
 import uuid
 from unittest.mock import patch, MagicMock, AsyncMock
@@ -77,7 +78,9 @@ async def test_start_stop(runtime):
 
 
 @pytest.mark.asyncio
-async def test_submit_query(runtime, invocation_id, session_id, mock_post_message_callback):
+async def test_submit_query(
+    runtime, invocation_id, session_id, mock_post_message_callback
+):
     """Test submitting a query to the runtime."""
     with patch("uuid.uuid4", return_value=uuid.UUID(invocation_id)):
         with patch.object(runtime._queue, "put", new_callable=AsyncMock) as mock_put:
@@ -87,7 +90,10 @@ async def test_submit_query(runtime, invocation_id, session_id, mock_post_messag
                 post_message_callback=mock_post_message_callback,
             )
 
-            assert runtime._post_message_callbacks[invocation_id] == mock_post_message_callback
+            assert (
+                runtime._post_message_callbacks[invocation_id]
+                == mock_post_message_callback
+            )
             mock_put.assert_called_once()
             context_arg = mock_put.call_args[0][0]
             assert context_arg.invocation_id == invocation_id
@@ -114,7 +120,9 @@ async def test_before_query(runtime, invocation_context):
 @pytest.mark.asyncio
 async def test_during_query(runtime, invocation_context, mock_post_message_callback):
     """Test the _during_query method."""
-    runtime._post_message_callbacks[invocation_context.invocation_id] = mock_post_message_callback
+    runtime._post_message_callbacks[invocation_context.invocation_id] = (
+        mock_post_message_callback
+    )
     content = "Test response"
     runtime._during_query(invocation_context, content)
 
@@ -128,7 +136,9 @@ async def test_during_query(runtime, invocation_context, mock_post_message_callb
 @pytest.mark.asyncio
 async def test_after_query(runtime, invocation_context, mock_post_message_callback):
     """Test the _after_query method."""
-    runtime._post_message_callbacks[invocation_context.invocation_id] = mock_post_message_callback
+    runtime._post_message_callbacks[invocation_context.invocation_id] = (
+        mock_post_message_callback
+    )
     content = "Test response"
     runtime._after_query(invocation_context, content)
 
@@ -149,7 +159,9 @@ async def test_after_query(runtime, invocation_context, mock_post_message_callba
 @pytest.mark.asyncio
 async def test_on_query_error(runtime, invocation_context, mock_post_message_callback):
     """Test the _on_query_error method."""
-    runtime._post_message_callbacks[invocation_context.invocation_id] = mock_post_message_callback
+    runtime._post_message_callbacks[invocation_context.invocation_id] = (
+        mock_post_message_callback
+    )
     error = Exception("Test error")
     runtime._on_query_error(invocation_context, error)
 
@@ -161,9 +173,13 @@ async def test_on_query_error(runtime, invocation_context, mock_post_message_cal
 
 
 @pytest.mark.asyncio
-async def test_before_tool_call(runtime, invocation_context, mock_post_message_callback):
+async def test_before_tool_call(
+    runtime, invocation_context, mock_post_message_callback
+):
     """Test the _before_tool_call method."""
-    runtime._post_message_callbacks[invocation_context.invocation_id] = mock_post_message_callback
+    runtime._post_message_callbacks[invocation_context.invocation_id] = (
+        mock_post_message_callback
+    )
     tool_call_id = str(uuid.uuid4())
     tool_name = "test_tool"
     args = '{"test_param": "test_value"}'

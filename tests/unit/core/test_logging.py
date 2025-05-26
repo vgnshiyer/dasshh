@@ -1,6 +1,7 @@
 """
 Tests for the logging module.
 """
+
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
@@ -9,7 +10,7 @@ from dasshh.core.logging import get_logger, DEFAULT_LOG_DIR, DEFAULT_LOG_FILE
 
 def test_get_logger():
     """Test get_logger function."""
-    with patch('logging.getLogger') as mock_get_logger:
+    with patch("logging.getLogger") as mock_get_logger:
         mock_logger = MagicMock()
         mock_get_logger.return_value = mock_logger
         logger = get_logger("test_logger")

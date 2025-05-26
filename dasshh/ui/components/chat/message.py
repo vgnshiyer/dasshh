@@ -36,7 +36,9 @@ class ChatMessage(Static):
 
     content: reactive[str] = reactive("", layout=True)
 
-    def __init__(self, invocation_id: str, role: str, content: str, *args: Any, **kwargs: Any) -> None:
+    def __init__(
+        self, invocation_id: str, role: str, content: str, *args: Any, **kwargs: Any
+    ) -> None:
         super().__init__(*args, **kwargs)
         self.invocation_id = invocation_id
         if role == "user":
@@ -59,7 +61,4 @@ class ChatMessage(Static):
         title = Text(f"{role_icon} {self.role.capitalize()}", style=role_style)
         text = Markdown(self.content) if self.content else Text("")
 
-        return Group(
-            title,
-            text
-        )
+        return Group(title, text)

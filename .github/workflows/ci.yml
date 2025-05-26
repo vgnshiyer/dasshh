@@ -38,18 +38,26 @@ jobs:
       - name: Lint with ruff (if available)
         run: |
           uv pip install ruff || echo "Ruff not available, skipping linting"
-          ruff check . || echo "No ruff configuration found, skipping linting"
+          uv run ruff check . || echo "No ruff configuration found, skipping linting"
+          uv run ruff format --check . || echo "No ruff configuration found, skipping linting"
         continue-on-error: true
 
       - name: Run tests with pytest
         run: |
-          uv run pytest tests/ -v --cov=dasshh --cov-report=xml --cov-report=term-missing
+          uv run pytest tests/ -v --cov=dasshh --cov-report=xml --cov-report=term-missing --cov-report=html
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
+
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html-report
+          path: htmlcov/
+          if-no-files-found: warn
 
       - name: Test build package
         run: |

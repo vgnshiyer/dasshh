@@ -1,6 +1,7 @@
 """
 Tests for database models.
 """
+
 import uuid
 from datetime import datetime
 
@@ -12,10 +13,7 @@ def test_storage_session_model():
     session_id = str(uuid.uuid4())
     now = datetime.now()
     session = StorageSession(
-        id=session_id,
-        detail="Test Session",
-        created_at=now,
-        updated_at=now
+        id=session_id, detail="Test Session", created_at=now, updated_at=now
     )
 
     assert session.id == session_id

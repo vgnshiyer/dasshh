@@ -13,7 +13,7 @@ def tool(func: Callable):
         name=func.__name__,
         description=func.__doc__,
         parameters=func.__annotations__,
-        func=func
+        func=func,
     )
 
     registry = Registry()

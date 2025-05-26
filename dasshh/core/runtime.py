@@ -27,12 +27,7 @@ logger = logging.getLogger(__name__)
 
 InvocationContext = namedtuple(
     "InvocationContext",
-    [
-        "invocation_id",
-        "session_id",
-        "message",
-        "system_instruction"
-    ]
+    ["invocation_id", "session_id", "message", "system_instruction"],
 )
 
 
@@ -75,7 +70,9 @@ class DasshhRuntime:
     Your main goal is to save user's time and effort.
     """
     """The system prompt for the runtime."""
-    _default_error_response: str = "Sorry, I'm having trouble with that. Please try again later."
+    _default_error_response: str = (
+        "Sorry, I'm having trouble with that. Please try again later."
+    )
     """The default error response for the runtime."""
     skip_summarization: bool = False
     """Whether to skip summarization after a tool call."""
@@ -123,7 +120,9 @@ class DasshhRuntime:
         """Adds system prompt and session history to the message."""
         prompt = [self.system_prompt]
         for event in self._session_service.get_events(session_id=context.session_id):
-            prompt.append(event.content)  # current message is included in history already
+            prompt.append(
+                event.content
+            )  # current message is included in history already
         return prompt
 
     async def start(self):
@@ -208,7 +207,9 @@ class DasshhRuntime:
                 logger.info("-- query processing cancelled --")
                 break
 
-    async def _run_async(self, context: InvocationContext) -> AsyncGenerator[ModelResponse, None]:
+    async def _run_async(
+        self, context: InvocationContext
+    ) -> AsyncGenerator[ModelResponse, None]:
         """Run a completion query."""
         response = await acompletion(
             model=self.model,
@@ -259,9 +260,13 @@ class DasshhRuntime:
 
     def __get_post_message_callback(self, context: InvocationContext) -> Callable:
         """Get the post_message_callback for the query."""
-        post_message_callback = self._post_message_callbacks.get(context.invocation_id, None)
+        post_message_callback = self._post_message_callbacks.get(
+            context.invocation_id, None
+        )
         if not post_message_callback:
-            logger.warning(f"-- No post_message_callback found for query {context.invocation_id} --")
+            logger.warning(
+                f"-- No post_message_callback found for query {context.invocation_id} --"
+            )
             return None
         return post_message_callback
 
@@ -272,7 +277,9 @@ class DasshhRuntime:
         post_message_callback = self.__get_post_message_callback(context)
         if not post_message_callback:
             return
-        post_message_callback(AssistantResponseStart(invocation_id=context.invocation_id))
+        post_message_callback(
+            AssistantResponseStart(invocation_id=context.invocation_id)
+        )
         self._session_service.add_event(
             invocation_id=context.invocation_id,
             content=context.message,
@@ -298,8 +305,7 @@ class DasshhRuntime:
             return
         post_message_callback(
             AssistantResponseComplete(
-                invocation_id=context.invocation_id,
-                content=content
+                invocation_id=context.invocation_id, content=content
             )
         )
         self._session_service.add_event(
@@ -318,13 +324,12 @@ class DasshhRuntime:
         if not post_message_callback:
             return
         post_message_callback(
-            AssistantResponseError(
-                invocation_id=context.invocation_id,
-                error=str(e)
-            )
+            AssistantResponseError(invocation_id=context.invocation_id, error=str(e))
         )
 
-    def _before_tool_call(self, context: InvocationContext, tool_call_id: str, tool_name: str, args: str) -> None:
+    def _before_tool_call(
+        self, context: InvocationContext, tool_call_id: str, tool_name: str, args: str
+    ) -> None:
         """Callback before a tool call is run."""
         post_message_callback = self.__get_post_message_callback(context)
         if not post_message_callback:

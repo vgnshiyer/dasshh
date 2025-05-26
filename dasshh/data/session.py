@@ -35,14 +35,20 @@ class SessionService:
     def get_events(self, *, session_id: str) -> list[StorageEvent]:
         """Get all events for a session."""
         with self.db_client.get_db() as db:
-            events = db.query(StorageEvent).filter(StorageEvent.session_id == session_id).all()
+            events = (
+                db.query(StorageEvent)
+                .filter(StorageEvent.session_id == session_id)
+                .all()
+            )
             return events
 
     def get_recent_session(self) -> StorageSession | None:
         """Get the most recent session."""
         with self.db_client.get_db() as db:
             session: StorageSession | None = (
-                db.query(StorageSession).order_by(StorageSession.updated_at.desc()).first()
+                db.query(StorageSession)
+                .order_by(StorageSession.updated_at.desc())
+                .first()
             )
             if not session:
                 return None
@@ -67,7 +73,11 @@ class SessionService:
             if include_events:
                 sessions = db.query(StorageSession).all()
             else:
-                sessions = db.query(StorageSession).options(noload(StorageSession.events)).all()
+                sessions = (
+                    db.query(StorageSession)
+                    .options(noload(StorageSession.events))
+                    .all()
+                )
             return sessions
 
     def delete_session(self, *, session_id: str) -> None:

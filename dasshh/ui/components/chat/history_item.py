@@ -66,7 +66,7 @@ class HistoryItem(Static):
         detail: str,
         created_at: datetime,
         *args: Any,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self.session_id = session_id
@@ -85,9 +85,13 @@ class HistoryItem(Static):
         self.post_message(LoadSession(self.session_id))
 
     def render(self):
-        truncated_detail = (self.detail[:40] + "...") if len(self.detail) > 40 else self.detail
+        truncated_detail = (
+            (self.detail[:40] + "...") if len(self.detail) > 40 else self.detail
+        )
 
-        local_timestamp = self.created_at.replace(tzinfo=timezone.utc).astimezone(tz=None)
+        local_timestamp = self.created_at.replace(tzinfo=timezone.utc).astimezone(
+            tz=None
+        )
 
         now = datetime.now()
         time_str = local_timestamp.strftime("%I:%M %p")
@@ -102,7 +106,4 @@ class HistoryItem(Static):
         title = Text(truncated_detail, style="bold")
         date = Text(date_str, style="dim")
 
-        return Group(
-            title,
-            date
-        )
+        return Group(title, date)

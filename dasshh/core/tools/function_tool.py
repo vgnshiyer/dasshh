@@ -8,10 +8,13 @@ class FunctionTool(BaseTool):
     """
     A tool is a function that can be used to help the user.
     """
+
     func: Callable = None
     """The function of the tool."""
 
-    def __init__(self, name: str, description: str, parameters: dict, func: Callable = None):
+    def __init__(
+        self, name: str, description: str, parameters: dict, func: Callable = None
+    ):
         super().__init__(name, description, parameters)
         self.func = func
 

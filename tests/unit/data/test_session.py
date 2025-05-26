@@ -1,6 +1,7 @@
 """
 Tests for the session service.
 """
+
 import uuid
 
 from dasshh.data.models import StorageSession
@@ -98,7 +99,7 @@ def test_delete_nonexistent_session(test_session_service):
 def test_get_recent_session(test_session_service):
     """Test getting the most recent session."""
     session1 = test_session_service.new_session(detail="Test Session 1")
-    session2 = test_session_service.new_session(detail="Test Session 2")
+    test_session_service.new_session(detail="Test Session 2")
 
     recent_session = test_session_service.get_recent_session()
 

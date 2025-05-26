@@ -1,6 +1,7 @@
 """
 Tests for the registry module.
 """
+
 import pytest
 from unittest.mock import Mock
 
@@ -39,7 +40,10 @@ def test_add_duplicate_tool(reset_registry, mock_tool):
     duplicate_tool = Mock(spec=BaseTool)
     duplicate_tool.name = mock_tool.name
 
-    with pytest.raises(ValueError, match=f"Tool name must be unique, there is already a tool named {mock_tool.name}"):
+    with pytest.raises(
+        ValueError,
+        match=f"Tool name must be unique, there is already a tool named {mock_tool.name}",
+    ):
         registry.add_tool(duplicate_tool)
 
 

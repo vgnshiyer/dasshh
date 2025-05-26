@@ -13,9 +13,4 @@ def get_available_tools() -> dict:
     registry = Registry()
     tools = registry.get_tools()
 
-    return {
-        "available_tools": [
-            tool.get_declaration()
-            for tool in tools
-        ]
-    }
+    return {"available_tools": [tool.get_declaration() for tool in tools]}

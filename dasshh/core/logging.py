@@ -26,7 +26,7 @@ def setup_logging(log_file=None, log_level=logging.INFO):
         log_file,
         maxBytes=10 * 1024 * 1024,  # 10 MB
         backupCount=5,
-        encoding="utf-8"
+        encoding="utf-8",
     )
     file_handler.setFormatter(formatter)
     root_logger.addHandler(file_handler)

@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 
 DEFAULT_CONFIG_PATH = Path.home() / ".dasshh" / "config.yaml"
 try:
-    DASSHH_EXEC_PATH = str(Path(pkg_resources.files('dasshh')))
+    DASSHH_EXEC_PATH = str(Path(pkg_resources.files("dasshh")))
 except (ImportError, TypeError):
     DASSHH_EXEC_PATH = str(Path(__file__).parent.parent)
 
@@ -46,7 +46,9 @@ model:
 """
 
 
-def convert_session_obj(session_obj: StorageSession, events: List[StorageEvent] | None = None) -> UISession:
+def convert_session_obj(
+    session_obj: StorageSession, events: List[StorageEvent] | None = None
+) -> UISession:
     messages, actions = [], {}
     if events:
         for event in events:
@@ -55,7 +57,9 @@ def convert_session_obj(session_obj: StorageSession, events: List[StorageEvent] 
             if content["role"] == "assistant" and "tool_calls" in content:
                 for tool_call in content["tool_calls"]:
                     tool_call_id = tool_call["id"]
-                    args = json.dumps(json.loads(tool_call["function"]["arguments"]), indent=2)
+                    args = json.dumps(
+                        json.loads(tool_call["function"]["arguments"]), indent=2
+                    )
                     actions[tool_call_id] = UIAction(
                         invocation_id=invocation_id,
                         tool_call_id=tool_call_id,
@@ -68,7 +72,11 @@ def convert_session_obj(session_obj: StorageSession, events: List[StorageEvent] 
                 actions[tool_call_id].result = content["content"]
             elif content["role"] in ["user", "assistant"]:
                 messages.append(
-                    UIMessage(invocation_id=invocation_id, role=content["role"], content=content["content"])
+                    UIMessage(
+                        invocation_id=invocation_id,
+                        role=content["role"],
+                        content=content["content"],
+                    )
                 )
     return UISession(
         id=session_obj.id,
@@ -135,8 +143,8 @@ def get_from_config(key: str) -> dict | str | List | None:
     with open(DEFAULT_CONFIG_PATH, "r") as f:
         config = yaml.safe_load(f)
 
-    if '.' in key:
-        parts = key.split('.')
+    if "." in key:
+        parts = key.split(".")
         curr = config
         for part in parts:
             if curr is None or part not in curr:

@@ -1,6 +1,7 @@
 """
 Tests for the database client.
 """
+
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 

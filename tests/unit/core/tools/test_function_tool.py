@@ -1,6 +1,7 @@
 """
 Tests for the function tool class.
 """
+
 import pytest
 from unittest.mock import patch
 
@@ -27,6 +28,7 @@ def test_function_tool_initialization():
 
 def test_function_tool_call():
     """Test calling a FunctionTool."""
+
     def test_func(test_param=None):
         """A test function."""
         return {"result": f"Test result with {test_param}"}
@@ -35,7 +37,7 @@ def test_function_tool_call():
         name="test_function",
         description="A test function",
         parameters={"type": "object", "properties": {}},
-        func=test_func
+        func=test_func,
     )
 
     result = tool(test_param="test_value")
@@ -48,7 +50,7 @@ def test_function_tool_call_no_implementation():
     tool = FunctionTool(
         name="test_function",
         description="A test function",
-        parameters={"type": "object", "properties": {}}
+        parameters={"type": "object", "properties": {}},
     )
 
     with pytest.raises(NotImplementedError, match="This tool has no implementation"):
@@ -57,6 +59,7 @@ def test_function_tool_call_no_implementation():
 
 def test_function_tool_get_declaration():
     """Test getting the declaration of a FunctionTool."""
+
     # Define a simple test function
     def test_func(test_param=None):
         """A test function."""
@@ -68,23 +71,20 @@ def test_function_tool_get_declaration():
         "parameters": {
             "type": "object",
             "properties": {
-                "test_param": {
-                    "type": "string",
-                    "description": "Test parameter"
-                }
-            }
-        }
+                "test_param": {"type": "string", "description": "Test parameter"}
+            },
+        },
     }
 
     with patch(
         "dasshh.core.tools.function_tool.function_to_dict",
-        return_value=expected_declaration
+        return_value=expected_declaration,
     ) as mock_fn_to_dict:
         tool = FunctionTool(
             name="test_function",
             description="A test function",
             parameters={"type": "object", "properties": {}},
-            func=test_func
+            func=test_func,
         )
 
         declaration = tool.get_declaration()

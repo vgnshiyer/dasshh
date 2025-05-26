@@ -5,6 +5,7 @@ class BaseTool(ABC):
     """
     Base class for all tools.
     """
+
     name: str
     """The name of the tool."""
     description: str

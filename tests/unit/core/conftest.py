@@ -1,6 +1,7 @@
 """
 Test fixtures for the core module.
 """
+
 import os
 import tempfile
 from unittest.mock import MagicMock, patch
@@ -49,19 +50,14 @@ def mock_tool():
     tool_parameters = {
         "type": "object",
         "properties": {
-            "test_param": {
-                "type": "string",
-                "description": "Test parameter"
-            }
-        }
+            "test_param": {"type": "string", "description": "Test parameter"}
+        },
     }
 
     class TestTool(BaseTool):
         def __init__(self):
             super().__init__(
-                name="test_tool",
-                description="A test tool",
-                parameters=tool_parameters
+                name="test_tool", description="A test tool", parameters=tool_parameters
             )
 
         def __call__(self, test_param=None):
@@ -73,8 +69,8 @@ def mock_tool():
                 "function": {
                     "name": self.name,
                     "description": self.description,
-                    "parameters": self.parameters
-                }
+                    "parameters": self.parameters,
+                },
             }
 
     return TestTool()

@@ -89,9 +89,9 @@ def test_assistant_tool_call_start_event():
     tool_call_id = "test_tool_call_id"
     tool_name = "test_tool"
     args = '{"param": "value"}'
-    
+
     event = AssistantToolCallStart(invocation_id, tool_call_id, tool_name, args)
-    
+
     assert event.invocation_id == invocation_id
     assert event.tool_call_id == tool_call_id
     assert event.tool_name == tool_name
@@ -104,9 +104,9 @@ def test_assistant_tool_call_complete_event():
     tool_call_id = "test_tool_call_id"
     tool_name = "test_tool"
     result = '{"result": "success"}'
-    
+
     event = AssistantToolCallComplete(invocation_id, tool_call_id, tool_name, result)
-    
+
     assert event.invocation_id == invocation_id
     assert event.tool_call_id == tool_call_id
     assert event.tool_name == tool_name
@@ -119,10 +119,10 @@ def test_assistant_tool_call_error_event():
     tool_call_id = "test_tool_call_id"
     tool_name = "test_tool"
     error = "Tool call error message"
-    
+
     event = AssistantToolCallError(invocation_id, tool_call_id, tool_name, error)
-    
+
     assert event.invocation_id == invocation_id
     assert event.tool_call_id == tool_call_id
     assert event.tool_name == tool_name
-    assert event.error == error 
+    assert event.error == error

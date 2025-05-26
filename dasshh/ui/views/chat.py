@@ -24,14 +24,13 @@ from dasshh.ui.events import (
     AssistantToolCallError,
     LoadSession,
     NewSession,
-    DeleteSession
+    DeleteSession,
 )
 
 logger = get_logger("dasshh.views.chat")
 
 
 class Chat(Widget):
-
     DEFAULT_CSS = """
     Chat {
         layout: vertical;
@@ -114,9 +113,11 @@ class Chat(Widget):
         """Reload current chat window"""
         current_session: UISession = convert_session_obj(
             self.session_service.get_session(session_id=self.current_session_id),
-            self.session_service.get_events(session_id=self.current_session_id)
+            self.session_service.get_events(session_id=self.current_session_id),
         )
-        current_session.messages.insert(0, UIMessage(role="assistant", content=self.DEFAULT_GREETING))
+        current_session.messages.insert(
+            0, UIMessage(role="assistant", content=self.DEFAULT_GREETING)
+        )
         self.chat_panel.load_messages(current_session.messages)
         self.actions_panel.load_actions(current_session.actions)
 
@@ -159,19 +160,20 @@ class Chat(Widget):
         self.chat_panel.add_new_message(
             message=UIMessage(role="user", content=event.message)
         )
-        current_session_widget = self.history_panel.get_history_item_widget(self.current_session_id)
+        current_session_widget = self.history_panel.get_history_item_widget(
+            self.current_session_id
+        )
         if current_session_widget:
             current_session_widget.detail = event.message
             self.session_service.update_session(
-                session_id=self.current_session_id,
-                detail=event.message
+                session_id=self.current_session_id, detail=event.message
             )
 
         logger.debug(f"Submitting query {event.message} to runtime")
         await self.runtime.submit_query(
             message=event.message,
             session_id=self.current_session_id,
-            post_message_callback=self.post_message
+            post_message_callback=self.post_message,
         )
 
     # -- Assistant events --
@@ -180,25 +182,23 @@ class Chat(Widget):
     def on_assistant_response_start(self, event: AssistantResponseStart) -> None:
         """Handle when the assistant starts processing a response."""
         self.chat_panel.add_new_message(
-            message=UIMessage(invocation_id=event.invocation_id, role="assistant", content="")
+            message=UIMessage(
+                invocation_id=event.invocation_id, role="assistant", content=""
+            )
         )
 
     @on(AssistantResponseUpdate)
     def on_assistant_response_update(self, event: AssistantResponseUpdate) -> None:
         """Handle when the assistant updates the response."""
         self.chat_panel.update_assistant_message(
-            invocation_id=event.invocation_id,
-            content=event.content,
-            final=False
+            invocation_id=event.invocation_id, content=event.content, final=False
         )
 
     @on(AssistantResponseComplete)
     def on_assistant_response_complete(self, event: AssistantResponseComplete) -> None:
         """Handle when the assistant completes processing a response."""
         self.chat_panel.update_assistant_message(
-            invocation_id=event.invocation_id,
-            content=event.content,
-            final=True
+            invocation_id=event.invocation_id, content=event.content, final=True
         )
 
     @on(AssistantResponseError)
@@ -215,7 +215,7 @@ class Chat(Widget):
                 invocation_id=event.invocation_id,
                 name=event.tool_name,
                 args=json.dumps(json.loads(event.args), indent=2),
-                result=""
+                result="",
             )
         )
 
@@ -225,7 +225,7 @@ class Chat(Widget):
         self.actions_panel.update_action(
             invocation_id=event.invocation_id,
             tool_call_id=event.tool_call_id,
-            result=event.result
+            result=event.result,
         )
 
     @on(AssistantToolCallError)

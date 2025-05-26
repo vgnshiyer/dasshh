@@ -58,7 +58,10 @@ class ChatPanel(Widget):
         container = self.query_one("#messages-container")
         container.remove_children()
 
-        text = Static(Text("Start a new session or load a previous one.", style="dim"), classes="chat-message")
+        text = Static(
+            Text("Start a new session or load a previous one.", style="dim"),
+            classes="chat-message",
+        )
         text.styles.text_align = "center"
         text.styles.margin = (1, 1, 1, 1)
         container.mount(text)
@@ -82,12 +85,14 @@ class ChatPanel(Widget):
             invocation_id=message.invocation_id,
             role=message.role,
             content=message.content,
-            classes="chat-message"
+            classes="chat-message",
         )
         container.mount(message_widget)
         container.scroll_end()
 
-    def update_assistant_message(self, *, invocation_id: str, content: str, final: bool = False) -> None:
+    def update_assistant_message(
+        self, *, invocation_id: str, content: str, final: bool = False
+    ) -> None:
         """Update the content of the most recent assistant message (used for streaming)."""
         message_widget = self.get_message_widget(invocation_id)
         if not message_widget:

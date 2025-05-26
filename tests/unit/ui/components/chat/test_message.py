@@ -1,4 +1,5 @@
 """Tests for the ChatMessage component."""
+
 from rich.console import Group
 from rich.markdown import Markdown
 from rich.text import Text
@@ -8,11 +9,7 @@ from dasshh.ui.components.chat.message import ChatMessage
 
 def test_chat_message_initialization_user():
     """Test ChatMessage initialization with user role."""
-    message = ChatMessage(
-        invocation_id="test_id",
-        role="user",
-        content="Hello, world!"
-    )
+    message = ChatMessage(invocation_id="test_id", role="user", content="Hello, world!")
 
     assert message.invocation_id == "test_id"
     assert message.role == "you"
@@ -23,9 +20,7 @@ def test_chat_message_initialization_user():
 def test_chat_message_initialization_assistant():
     """Test ChatMessage initialization with assistant role."""
     message = ChatMessage(
-        invocation_id="test_id",
-        role="assistant",
-        content="Hello, I'm the assistant!"
+        invocation_id="test_id", role="assistant", content="Hello, I'm the assistant!"
     )
 
     assert message.invocation_id == "test_id"
@@ -36,11 +31,7 @@ def test_chat_message_initialization_assistant():
 
 def test_chat_message_render_user():
     """Test rendering a user message."""
-    message = ChatMessage(
-        invocation_id="test_id",
-        role="user",
-        content="Hello, world!"
-    )
+    message = ChatMessage(invocation_id="test_id", role="user", content="Hello, world!")
 
     rendered = message.render()
 
@@ -59,9 +50,7 @@ def test_chat_message_render_user():
 def test_chat_message_render_assistant():
     """Test rendering an assistant message."""
     message = ChatMessage(
-        invocation_id="test_id",
-        role="assistant",
-        content="Hello, I'm the assistant!"
+        invocation_id="test_id", role="assistant", content="Hello, I'm the assistant!"
     )
     rendered = message.render()
 
@@ -79,11 +68,7 @@ def test_chat_message_render_assistant():
 
 def test_chat_message_empty_assistant():
     """Test rendering an empty assistant message (typing indicator)."""
-    message = ChatMessage(
-        invocation_id="test_id",
-        role="dasshh",
-        content=""
-    )
+    message = ChatMessage(invocation_id="test_id", role="dasshh", content="")
     message.role = "assistant"
     rendered = message.render()
 

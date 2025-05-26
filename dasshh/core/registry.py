@@ -5,6 +5,7 @@ class Registry:
     """
     A registry for tools.
     """
+
     _instance: "Registry" = None
     """The singleton instance of the registry."""
     tools: dict[str, BaseTool] = {}
@@ -20,7 +21,9 @@ class Registry:
         Add a tool to the registry.
         """
         if tool.name in self.tools:
-            raise ValueError(f"Tool name must be unique, there is already a tool named {tool.name}")
+            raise ValueError(
+                f"Tool name must be unique, there is already a tool named {tool.name}"
+            )
         self.tools[tool.name] = tool
 
     def get_tools(self) -> list[BaseTool]:
