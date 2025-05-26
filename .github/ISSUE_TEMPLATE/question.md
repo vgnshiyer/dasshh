@@ -34,9 +34,9 @@ assignees: []
 - **dasshh Version**: [e.g. 0.1.3]
 - **Installation Method**: [e.g. pip, uv, from source]
 
-## 📝 Additional Details
+## 📝 Additional Context
 
-**Any additional information that might be helpful:**
+<!-- Any additional information that might be helpful: -->
 
 <!-- Code snippets, error messages, screenshots, etc. -->
 

@@ -29,39 +29,19 @@ assignees: []
 
 ## 🐛 Current Problem
 
-**Describe what's wrong with the current documentation:**
-
-<!-- Clear description of the issue -->
+<!-- Describe what's wrong with the current documentation: -->
 
 ## ✅ Suggested Improvement
 
-**What should be changed or added?**
-
-<!-- Detailed description of the improvement -->
+<!-- What should be changed or added? -->
 
 ## 📝 Content Suggestion
 
-**If you have specific content suggestions, please provide them here:**
+<!-- If you have specific content suggestions, please provide them here: -->
 
-<!-- Paste your suggested content here -->
+## 📝 Additional Context
 
-## 👥 Target Audience
-
-**Who would benefit from this documentation improvement?**
-
-- [ ] New users/beginners
-- [ ] Experienced users
-- [ ] Developers/contributors
-- [ ] System administrators
-- [ ] All users
-
-## 🔍 Additional Context
-
-**Add any other context about the documentation issue:**
-
-- How did you discover this issue?
-- What were you trying to accomplish?
-- What documentation would have helped you?
+<!-- Add any other context, links, or screenshots about the feature request here. -->
 
 ## 📋 Checklist
 

@@ -8,27 +8,23 @@ assignees: []
 
 ## 🐛 Bug Description
 
-**A clear and concise description of what the bug is.**
+<!-- A clear and concise description of what the bug is. -->
 
 ## 🔄 Steps to Reproduce
 
-**Steps to reproduce the behavior:**
-
-<!-- Paste the steps to reproduce the behavior here -->
+<!-- Paste the steps to reproduce the behavior here in point form -->
 
 ## ✅ Expected Behavior
 
-**A clear and concise description of what you expected to happen.**
+<!-- A clear and concise description of what you expected to happen. -->
 
 ## ❌ Actual Behavior
 
-**A clear and concise description of what actually happened.**
+<!-- A clear and concise description of what actually happened. -->
 
 ## 📱 Screenshots/Logs
 
-**If applicable, add screenshots, error logs, or terminal output to help explain your problem.**
-
-<!-- Paste any error messages or logs here -->
+<!-- If applicable, add screenshots, error logs, or terminal output to help explain your problem. -->
 
 ## 🖥️ Environment
 
@@ -43,15 +39,11 @@ assignees: []
 
 ## 🔧 Additional Context
 
-**Add any other context about the problem here.**
-
-- Does this happen consistently or intermittently?
-- Did this work in a previous version?
-- Are there any workarounds you've found?
+<!-- Add any other context about the problem here. -->
 
 ## 🔍 Possible Solution
 
-**If you have suggestions on how to fix the bug, please describe them here.**
+<!-- If you have suggestions on how to fix the bug, please describe them here. -->
 
 ## 📋 Checklist
 

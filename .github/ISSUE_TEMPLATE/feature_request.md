@@ -8,23 +8,19 @@ assignees: []
 
 ## 🚀 Feature Description
 
-**A clear and concise description of the feature you'd like to see added.**
+<!-- A clear and concise description of the feature you'd like to see added. -->
 
 ## 🎯 Problem Statement
 
-**Is your feature request related to a problem? Please describe the problem you're trying to solve.**
-
-<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
+<!-- Is your feature request related to a problem? Please describe the problem you're trying to solve. -->
 
 ## 💡 Proposed Solution
 
-**Describe the solution you'd like**
-
-<!-- A clear and concise description of what you want to happen. -->
+<!-- Describe the solution you'd like -->
 
 ## 🔄 Use Cases
 
-**Describe specific use cases for this feature:**
+<!-- Describe specific use cases for this feature: -->
 
 <!-- Example:
 1. **Use Case 1**: [Describe a specific scenario where this feature would be useful]
@@ -33,16 +29,14 @@ assignees: []
 
 ## 🖥️ Mockups/Examples
 
-**If applicable, add mockups, screenshots, or examples to help explain your feature.**
+<!-- If applicable, add mockups, screenshots, or examples to help explain your feature. -->
 
 <!-- Example of how the feature might work
 dasshh new-command --option value -->
 
 ## 🔀 Alternatives Considered
 
-**Describe alternatives you've considered**
-
-<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+<!-- Describe alternatives you've considered -->
 
 ## 📊 Expected Impact
 
@@ -55,28 +49,9 @@ dasshh new-command --option value -->
 - [ ] Improves performance
 - [ ] Other: [Please describe]
 
-## 🛠️ Implementation Ideas
-
-**If you have ideas on how this could be implemented, please share them:**
-
-- Technical approach
-- Required dependencies
-- Potential challenges
-- Breaking changes (if any)
-
-## 📋 Acceptance Criteria
-
-**What conditions must be met for this feature to be considered complete?**
-
-- [ ] [Specific requirement 1]
-- [ ] [Specific requirement 2]
-- [ ] [Specific requirement 3]
-- [ ] Documentation updated
-- [ ] Tests added
-
 ## 📝 Additional Context
 
-**Add any other context, links, or screenshots about the feature request here.**
+<!-- Add any other context, links, or screenshots about the feature request here. -->
 
 ## 📋 Checklist
 
