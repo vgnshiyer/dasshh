@@ -74,8 +74,11 @@ class Dasshh(App):
 
     def watch_theme(self, theme: str) -> None:
         self.config["dasshh"]["theme"] = theme
+        self.update_config()
+
+    def update_config(self) -> None:
+        self.logger.debug(f"Updating config: {self.config}")
         DEFAULT_CONFIG_PATH.write_text(yaml.dump(self.config))
-        self.logger.debug(f"Theme set to {theme}")
 
 
 if __name__ == "__main__":
