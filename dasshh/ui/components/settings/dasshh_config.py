@@ -38,6 +38,9 @@ class DasshhConfig(SettingsSection):
             valid_empty=True
         )
 
+        yield Static("Model:")
+        yield Select([], prompt="Select model", id="model")
+
     @on(Checkbox.Changed, "#skip-summarization")
     def on_skip_summarization_changed(self, event: Checkbox.Changed) -> None:
         settings_widget = self.parent.parent
@@ -55,6 +58,12 @@ class DasshhConfig(SettingsSection):
         settings_widget = self.parent.parent
         if hasattr(settings_widget, 'app'):
             settings_widget.app.theme = event.value
+
+    @on(Select.Changed, "#model")
+    def on_model_changed(self, event: Select.Changed) -> None:
+        settings_widget = self.parent.parent
+        if hasattr(settings_widget, 'app'):
+            settings_widget.app.selected_model = event.value
 
     @on(Input.Changed, "#tool-directories")
     def on_tool_directories_changed(self, event: Input.Changed) -> None:

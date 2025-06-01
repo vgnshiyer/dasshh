@@ -50,7 +50,7 @@ class Settings(Widget):
     def compose(self) -> ComposeResult:
         with ScrollableContainer(id="settings-container"):
             yield DasshhConfig()
-            yield ModelConfig()
+            # yield ModelConfig()
 
     def on_mount(self) -> None:
         """Load current configuration when the widget mounts."""
@@ -95,6 +95,10 @@ class Settings(Widget):
 
             tool_dirs_input = self.query_one("#tool-directories", Input)
             tool_dirs_input.value = self.tool_directories or ""
+
+            model_select = self.query_one("#model")
+            model_select.set_options((model, model) for model in self.app.available_models)
+            model_select.value = self.app.selected_model
 
             model_name_input = self.query_one("#model-name", Input)
             model_name_input.value = self.model_name or ""
