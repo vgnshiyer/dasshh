@@ -2,10 +2,8 @@ import json
 import os
 import sys
 import yaml
-from pathlib import Path
 from typing import List
 from importlib import import_module
-import importlib.resources as pkg_resources
 
 from dasshh.data.models import StorageSession, StorageEvent
 from dasshh.ui.types import (
@@ -14,36 +12,13 @@ from dasshh.ui.types import (
     UIAction,
 )
 from dasshh.core.logging import get_logger
+from dasshh.ui.constants import (
+    DEFAULT_CONFIG_PATH,
+    DEFAULT_TOOLS_PATH,
+    DEFAULT_CONFIG,
+)
 
 logger = get_logger(__name__)
-
-
-DEFAULT_CONFIG_PATH = Path.home() / ".dasshh" / "config.yaml"
-try:
-    DASSHH_EXEC_PATH = str(Path(pkg_resources.files("dasshh")))
-except (ImportError, TypeError):
-    DASSHH_EXEC_PATH = str(Path(__file__).parent.parent)
-
-DEFAULT_TOOLS_PATH = str(Path(DASSHH_EXEC_PATH) / "apps")
-
-DEFAULT_CONFIG = f"""
-dasshh:
-  skip_summarization: false
-  system_prompt:
-  tool_directories:
-    - {DEFAULT_TOOLS_PATH}
-  theme: lime
-
-model:
-  name: gemini/gemini-2.0-flash
-  api_base:
-  api_key:
-  api_version:
-  temperature: 1.0
-  top_p: 1.0
-  max_tokens:
-  max_completion_tokens:
-"""
 
 
 def convert_session_obj(
@@ -88,7 +63,7 @@ def convert_session_obj(
     )
 
 
-def load_tools() -> None:
+def load_tools(tool_dirs: list[str] | None = None) -> None:
     """
     Load all tools from the given directories recursively.
 
@@ -96,9 +71,8 @@ def load_tools() -> None:
         dirs: A list of directory paths to load tools from (absolute file paths).
               If None, will use paths from config or fall back to default.
     """
-    tool_dirs_config = get_from_config("dasshh.tool_directories")
-    if tool_dirs_config:
-        dirs = tool_dirs_config
+    if tool_dirs:
+        dirs = tool_dirs
     else:
         dirs = [DEFAULT_TOOLS_PATH]
 
@@ -133,23 +107,3 @@ def load_config() -> dict:
     DEFAULT_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
     DEFAULT_CONFIG_PATH.write_text(DEFAULT_CONFIG)
     return yaml.safe_load(DEFAULT_CONFIG)
-
-
-def get_from_config(key: str) -> dict | str | List | None:
-    """Get a value from the configuration file."""
-    if not DEFAULT_CONFIG_PATH.exists():
-        return None
-
-    with open(DEFAULT_CONFIG_PATH, "r") as f:
-        config = yaml.safe_load(f)
-
-    if "." in key:
-        parts = key.split(".")
-        curr = config
-        for part in parts:
-            if curr is None or part not in curr:
-                return None
-            curr = curr.get(part)
-        return curr
-
-    return config.get(key, None)
