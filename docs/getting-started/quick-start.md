@@ -27,6 +27,10 @@ model:
   api_key: <your-google-AI-studio-api-key>
 ```
 
+You can also set the model name and API key in the settings menu.
+
+<img src="../../assets/settings.png" alt="Dasshh Settings" style="width: 100%; height: 100%; border-radius: 4px; padding: 10px; border: 1.5px solid hsl(93deg 100% 30%)">
+
 !!! tip
     Checkout the list of supported models and providers [here](https://docs.litellm.ai/docs/providers).
 
