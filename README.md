@@ -13,7 +13,6 @@ Dasshh is a tui built with [textual](https://textual.textualize.io/) that allows
 [![PyPI](https://img.shields.io/pypi/v/dasshh.svg)](https://pypi.org/project/dasshh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/vgnshiyer/dasshh/workflows/CI/badge.svg)](https://github.com/vgnshiyer/dasshh/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/vgnshiyer/dasshh/branch/main/graph/badge.svg)](https://codecov.io/gh/vgnshiyer/dasshh)
 [![](https://img.shields.io/badge/Follow-vgnshiyer-0A66C2?logo=linkedin)](https://www.linkedin.com/comm/mynetwork/discovery-see-all?usecase=PEOPLE_FOLLOWS&followMember=vgnshiyer)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow.svg?logo=buymeacoffee)](https://www.buymeacoffee.com/vgnshiyer)
 

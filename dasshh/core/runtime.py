@@ -63,7 +63,7 @@ class DasshhRuntime:
     """The database service for the runtime."""
     _post_message_callbacks: dict[str, Callable] = {}
     """The current textual component post_message callback for sending Agent events."""
-    _system_prompt: str = """
+    system_prompt: str = """
     Your name is Dasshh.
     You are a helpful assistant.
     You are able to use tools to help the user.
@@ -88,11 +88,11 @@ class DasshhRuntime:
 
         _system_prompt = get_from_config("dasshh.system_prompt")
         if _system_prompt:
-            self._system_prompt = _system_prompt
+            self.system_prompt = _system_prompt
 
-        self._load_model_config()
+        self.load_model_config()
 
-    def _load_model_config(self) -> None:
+    def load_model_config(self) -> None:
         """Load model configuration."""
         _model_config = get_from_config("model")
         if not _model_config:
@@ -100,8 +100,6 @@ class DasshhRuntime:
         self.model = _model_config.get("name", "")
         self.api_base = _model_config.get("api_base", "")
         self.api_key = _model_config.get("api_key", "")
-        if not self.api_key:
-            raise ValueError("API key is not set")
 
         self.api_version = _model_config.get("api_version", "")
         self.temperature = _model_config.get("temperature", 1.0)
@@ -109,16 +107,15 @@ class DasshhRuntime:
         self.max_tokens = _model_config.get("max_tokens", None)
         self.max_completion_tokens = _model_config.get("max_completion_tokens", None)
 
-    @property
-    def system_prompt(self) -> dict:
+    def get_system_prompt(self) -> dict:
         return {
             "role": "system",
-            "content": self._system_prompt,
+            "content": self.system_prompt,
         }
 
     def _generate_prompt(self, context: InvocationContext) -> List[dict]:
         """Adds system prompt and session history to the message."""
-        prompt = [self.system_prompt]
+        prompt = [self.get_system_prompt()]
         for event in self._session_service.get_events(session_id=context.session_id):
             prompt.append(
                 event.content

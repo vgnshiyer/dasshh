@@ -89,6 +89,13 @@ class Chat(Widget):
         self.chat_panel.query_one(ChatInput).disable()
         self._load_data()
 
+    def on_show(self) -> None:
+        """Chat view shown."""
+        model_set = bool(self.runtime.model)
+        api_key_set = bool(self.runtime.api_key)
+        if not model_set or not api_key_set:
+            self.notify("Please set your model name and API key in the settings.", severity="error", timeout=10)
+
     def _load_data(self) -> None:
         """Load previous sessions and chats."""
         # load recent session

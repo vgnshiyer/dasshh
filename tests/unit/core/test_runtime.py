@@ -61,7 +61,7 @@ def test_initialization(runtime, mock_session_service):
 
 def test_system_prompt(runtime):
     """Test the system prompt property."""
-    system_prompt = runtime.system_prompt
+    system_prompt = runtime.get_system_prompt()
     assert system_prompt["role"] == "system"
     assert "Your name is Dasshh" in system_prompt["content"]
 
