@@ -128,10 +128,12 @@ class Settings(Widget):
     def watch_skip_summarization(self, value: bool) -> None:
         self.config["dasshh"]["skip_summarization"] = value
         self.app.update_config()
+        self.app.runtime.skip_summarization = value
 
     def watch_system_prompt(self, value: str) -> None:
         self.config["dasshh"]["system_prompt"] = value
         self.app.update_config()
+        self.app.runtime.system_prompt = value
 
     def watch_tool_directories(self, value: str) -> None:
         self.config["dasshh"]["tool_directories"] = [d.strip() for d in value.split(",") if d.strip()]
@@ -140,31 +142,39 @@ class Settings(Widget):
     def watch_model_name(self, value: str) -> None:
         self.config["model"]["name"] = value
         self.app.update_config()
+        self.app.runtime.model = value
 
     def watch_api_base(self, value: str) -> None:
         self.config["model"]["api_base"] = value
         self.app.update_config()
+        self.app.runtime.api_base = value
 
     def watch_api_key(self, value: str) -> None:
         self.config["model"]["api_key"] = value
         self.app.update_config()
+        self.app.runtime.api_key = value
 
     def watch_api_version(self, value: str) -> None:
         self.config["model"]["api_version"] = value
         self.app.update_config()
+        self.app.runtime.api_version = value
 
     def watch_temperature(self, value: float) -> None:
         self.config["model"]["temperature"] = value
         self.app.update_config()
+        self.app.runtime.temperature = value
 
     def watch_top_p(self, value: float) -> None:
         self.config["model"]["top_p"] = value
         self.app.update_config()
+        self.app.runtime.top_p = value
 
     def watch_max_tokens(self, value) -> None:
         self.config["model"]["max_tokens"] = value
         self.app.update_config()
+        self.app.runtime.max_tokens = value
 
     def watch_max_completion_tokens(self, value) -> None:
         self.config["model"]["max_completion_tokens"] = value
         self.app.update_config()
+        self.app.runtime.max_completion_tokens = value
