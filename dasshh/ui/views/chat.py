@@ -91,10 +91,10 @@ class Chat(Widget):
 
     def on_show(self) -> None:
         """Chat view shown."""
-        model_set = bool(self.runtime.model)
-        api_key_set = bool(self.runtime.api_key)
-        if not model_set or not api_key_set:
-            self.notify("Please set your model name and API key in the settings.", severity="error", timeout=10)
+        selected_model = self.app.selected_model
+        if not selected_model:
+            self.notify("No model selected. Please select a model in settings.", severity="warning", timeout=10)
+            return
 
     def _load_data(self) -> None:
         """Load previous sessions and chats."""
