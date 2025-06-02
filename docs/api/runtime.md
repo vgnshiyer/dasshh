@@ -19,7 +19,7 @@ This dictionary contains the complete model configuration (via `litellm_params` 
 
 - `model`: The model provider and name (e.g., "gemini/gemini-2.0-flash")
 - `api_key`: The API key for the chosen provider
-- `api_base`: The base URL for the API (optional)
+- `base_url`: The base URL for the API (optional)
 - `api_version`: The API version to use (optional)
 - `temperature`: The temperature for the model (default: 1.0)
 - `top_p`: The top_p value for the model (default: 1.0)
