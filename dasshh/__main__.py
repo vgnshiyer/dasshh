@@ -6,7 +6,7 @@ from rich.console import Console
 from dasshh.core.logging import setup_logging
 from dasshh.ui.utils import load_config, DEFAULT_CONFIG_PATH
 
-__version__ = "0.1.4"
+__version__ = "0.2.0"
 
 
 @click.group(
