@@ -1,6 +1,6 @@
 [project]
 name = "dasshh"
-version = "0.1.4"
+version = "0.2.0"
 description = "An AI Agent on your terminal, to preserve your brain juice."
 readme = "README.md"
 license = { text = "MIT" }
@@ -14,7 +14,7 @@ dependencies = [
     "numpydoc>=1.8.0",
     "psutil>=7.0.0",
     "sqlalchemy>=2.0.41",
-    "textual>=3.2.0",
+    "textual[syntax]>=3.2.0",
 ]
 
 [project.urls]

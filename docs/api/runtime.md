@@ -7,68 +7,31 @@ This page lays out all the methods and attributes available on the DasshhRuntime
 
 <!-- ----------------------- ATTRIBUTES ---------------------------------- -->
 
-## `attr` model
+## `attr` model_config
 
-The model to use for the runtime
+The model configuration dictionary containing all LiteLLM parameters
 
 ```python
-model: str = ""
+model_config: dict = {}
 ```
 
-## `attr` api_base
+This dictionary contains the complete model configuration (via `litellm_params` key) including:
 
-The base URL for the API
+- `model`: The model provider and name (e.g., "gemini/gemini-2.0-flash")
+- `api_key`: The API key for the chosen provider
+- `base_url`: The base URL for the API (optional)
+- `api_version`: The API version to use (optional)
+- `temperature`: The temperature for the model (default: 1.0)
+- `top_p`: The top_p value for the model (default: 1.0)
+- `max_tokens`: The maximum number of tokens to generate
+- `max_completion_tokens`: The maximum number of tokens for completion
 
-```python
-api_base: str = ""
-```
+## `attr` system_prompt
 
-## `attr` api_key
-
-The API key to use for the runtime
-
-```python
-api_key: str = ""
-```
-
-## `attr` api_version
-
-The API version to use for the runtime
+The system prompt for the runtime
 
 ```python
-api_version: str = ""
-```
-
-## `attr` temperature
-
-The temperature to use for the runtime
-
-```python
-temperature: float = 1.0
-```
-
-## `attr` top_p
-
-The top_p to use for the runtime
-
-```python
-top_p: float = 1.0
-```
-
-## `attr` max_tokens
-
-The max_tokens to use for the runtime
-
-```python
-max_tokens: int | None = None
-```
-
-## `attr` max_completion_tokens
-
-The max_completion_tokens to use for the runtime
-
-```python
-max_completion_tokens: int | None = None
+system_prompt: str = "Your name is Dasshh..."
 ```
 
 ## `attr` skip_summarization
@@ -81,10 +44,10 @@ skip_summarization: bool = False
 
 <!-- ---------------- PROPERTIES ------------------------------------- -->
 
-## `property` system_prompt
+## `property` get_system_prompt
 
 ```python
-system_prompt -> dict
+get_system_prompt() -> dict
 ```
 
 Returns the system prompt as a formatted message dictionary
@@ -100,16 +63,25 @@ Returns the system prompt as a formatted message dictionary
 ## `method` __init__
 
 ```python
-__init__(session_service: SessionService)
+__init__(
+    *,
+    session_service: SessionService,
+    model_config: dict = {},
+    system_prompt: str = "",
+    skip_summarization: bool = False,
+)
 ```
 
-Initialize the DasshhRuntime with a session service
+Initialize the DasshhRuntime with configuration parameters
 
 **Parameters:**
 
 | Param|<div style="width: 100px">Default</div> |Description|
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
 | session_service |                   | The SessionService instance for managing conversations and events                         |
+| model_config | {} | Dictionary containing LiteLLM model configuration parameters |
+| system_prompt | "" | Custom system prompt for the assistant |
+| skip_summarization | False | Whether to skip summarization after tool calls |
 
 ## `method` start
 
@@ -155,20 +127,6 @@ Submit a query to the runtime for processing
 | None          |                     | This method is async and doesn't return a value                                          |
 
 <!-- ------------------ PRIVATE METHODS -------------------------------------- -->
-
-## `method` _load_model_config
-
-```python
-_load_model_config() -> None
-```
-
-Load model configuration from the config file
-
-**Raises:**
-
-| Type|<div style="width: 100px">Default</div> |Description|
-| ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| ValueError    |                     | If API key is not set in configuration                                                   |
 
 ## `method` _generate_prompt
 
@@ -227,22 +185,35 @@ async _handle_tool_calls(
 ) -> None
 ```
 
-Process and execute tool calls from the AI model
+Handle tool calls from the AI model
 
 **Parameters:**
 
 | Param|<div style="width: 100px">Default</div> |Description|
 | ------------- | :----------------:  | :----------------------------------------------------------------------------------------|
-| context       |                     | The invocation context                                                                    |
-| tool_calls    |                     | List of tool calls to execute                                                             |
+| context       |                     | The invocation context for this query                                                    |
+| tool_calls    |                     | List of tool calls from the AI model                                                     |
 
-## InvocationContext:
+## Configuration Integration
 
-A named tuple to store current query context.
+The DasshhRuntime receives its model configuration from the Dasshh app, which manages multiple model configurations:
 
-| Param | Type | Description |
-|-------|------|-------------|
-| invocation_id | str | The ID of the invocation |
-| message | dict | The message to send to the LLM |
-| session_id | str | The ID of the session |
-| system_instruction | bool | Whether to use the system instruction |
+```python
+# Example of how the runtime is configured
+runtime = DasshhRuntime(
+    session_service=session_service,
+    model_config={
+        "model_name": "gemini-flash",
+        "litellm_params": {
+            "model": "gemini/gemini-2.0-flash",
+            "api_key": "your-api-key",
+            "temperature": 0.7,
+            "max_tokens": 2000
+        }
+    },
+    system_prompt="Your custom system prompt",
+    skip_summarization=False
+)
+```
+
+The model configuration corresponds to the `litellm_params` section of a model entry in the configuration file.

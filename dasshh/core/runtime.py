@@ -20,7 +20,6 @@ from dasshh.ui.events import (
     AssistantToolCallComplete,
     AssistantToolCallError,
 )
-from dasshh.ui.utils import get_from_config
 
 logger = logging.getLogger(__name__)
 
@@ -36,24 +35,6 @@ class DasshhRuntime:
     Agent runtime for Dasshh.
     """
 
-    # -- Model settings --
-    model: str = ""
-    """The model to use for the runtime."""
-    api_base: str = ""
-    """The base URL for the API."""
-    api_key: str = ""
-    """The API key to use for the runtime."""
-    api_version: str = ""
-    """The API version to use for the runtime."""
-    temperature: float = 1.0
-    """The temperature to use for the runtime."""
-    top_p: float = 1.0
-    """The top_p to use for the runtime."""
-    max_tokens: int | None = None
-    """The max_tokens to use for the runtime."""
-    max_completion_tokens: int | None = None
-    """The max_completion_tokens to use for the runtime."""
-
     # -- Dasshh settings --
     _queue: asyncio.Queue
     """The queue of queries to be processed."""
@@ -63,6 +44,11 @@ class DasshhRuntime:
     """The database service for the runtime."""
     _post_message_callbacks: dict[str, Callable] = {}
     """The current textual component post_message callback for sending Agent events."""
+    _default_error_response: str = (
+        "Sorry, I'm having trouble with that. Please try again later."
+    )
+    """The default error response for the runtime."""
+
     system_prompt: str = """
     Your name is Dasshh.
     You are a helpful assistant.
@@ -70,42 +56,29 @@ class DasshhRuntime:
     Your main goal is to save user's time and effort.
     """
     """The system prompt for the runtime."""
-    _default_error_response: str = (
-        "Sorry, I'm having trouble with that. Please try again later."
-    )
-    """The default error response for the runtime."""
     skip_summarization: bool = False
     """Whether to skip summarization after a tool call."""
 
-    def __init__(self, session_service: SessionService):
+    # -- Model settings --
+    model_config: dict
+    """The model configuration for the runtime."""
+
+    def __init__(
+        self,
+        *,
+        session_service: SessionService,
+        model_config: dict = {},
+        system_prompt: str = "",
+        skip_summarization: bool = False,
+    ):
+        self.model_config = model_config
+        if system_prompt:
+            self.system_prompt = system_prompt
+        self.skip_summarization = skip_summarization
+
         self._session_service = session_service
         self._worker = None
         self._queue = asyncio.Queue()
-
-        _skip_summarization = get_from_config("dasshh.skip_summarization")
-        if _skip_summarization:
-            self.skip_summarization = True
-
-        _system_prompt = get_from_config("dasshh.system_prompt")
-        if _system_prompt:
-            self.system_prompt = _system_prompt
-
-        self.load_model_config()
-
-    def load_model_config(self) -> None:
-        """Load model configuration."""
-        _model_config = get_from_config("model")
-        if not _model_config:
-            return
-        self.model = _model_config.get("name", "")
-        self.api_base = _model_config.get("api_base", "")
-        self.api_key = _model_config.get("api_key", "")
-
-        self.api_version = _model_config.get("api_version", "")
-        self.temperature = _model_config.get("temperature", 1.0)
-        self.top_p = _model_config.get("top_p", 1.0)
-        self.max_tokens = _model_config.get("max_tokens", None)
-        self.max_completion_tokens = _model_config.get("max_completion_tokens", None)
 
     def get_system_prompt(self) -> dict:
         return {
@@ -208,15 +181,13 @@ class DasshhRuntime:
         self, context: InvocationContext
     ) -> AsyncGenerator[ModelResponse, None]:
         """Run a completion query."""
+        litellm_params = self.__get_litellm_params()
+        if not litellm_params:
+            raise ValueError("Model configuration is not set")
+        litellm_params = self.__drop_unsupported_params(litellm_params)
+
         response = await acompletion(
-            model=self.model,
-            base_url=self.api_base,
-            api_key=self.api_key,
-            api_version=self.api_version,
-            temperature=self.temperature,
-            top_p=self.top_p,
-            max_tokens=self.max_tokens,
-            max_completion_tokens=self.max_completion_tokens,
+            **litellm_params,
             messages=self._generate_prompt(context),
             tools=Registry().get_tool_declarations(),
             tool_choice="auto",
@@ -266,6 +237,17 @@ class DasshhRuntime:
             )
             return None
         return post_message_callback
+
+    def __get_litellm_params(self) -> dict:
+        """Get the litellm parameters for the model."""
+        if not self.model_config:
+            return {}
+        return self.model_config.get("litellm_params", {})
+
+    def __drop_unsupported_params(self, params: dict) -> dict:
+        """Drop params that are not supported by Dasshh."""
+        unsupported_params = ["n", "stream", "tool_choice", "tools"]
+        return {k: v for k, v in params.items() if k not in unsupported_params}
 
     # -- Events --
 

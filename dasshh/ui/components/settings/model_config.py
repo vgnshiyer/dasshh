@@ -1,163 +1,163 @@
+import yaml
+
 from textual.app import ComposeResult
-from textual.widgets import Static, Input
-from textual.validation import Number, Function
+from textual.widgets import TextArea, Button, Label
+from textual.widget import Widget
+from textual.reactive import reactive
+from textual.containers import ScrollableContainer, Horizontal
 from textual import on
 
+from dasshh.core.logging import get_logger
 from .settings_section import SettingsSection
 
+logger = get_logger(__name__)
 
-class ModelConfig(SettingsSection):
-    """Model Configuration section component."""
+
+class ModelConfig(Widget):
+    """Model Configuration"""
+
+    DEFAULT_CSS = """
+    ModelConfig {
+        layout: vertical;
+        padding: 1;
+        margin: 1 0;
+        border: round $secondary;
+    }
+
+    .model-header {
+        layout: horizontal;
+        height: auto;
+        align: left middle;
+        margin-bottom: 1;
+    }
+
+    .model-label {
+        width: 1fr;
+        text-style: bold;
+        color: $primary;
+    }
+
+    #save-button {
+        width: auto;
+        min-width: 8;
+        border: round $secondary;
+        color: $secondary;
+        background: $background;
+        text-style: bold;
+    }
+
+    #save-button:focus, #save-button:hover {
+        border: round $primary;
+        color: $primary;
+        background: $background;
+        background-tint: $background;
+        text-style: bold;
+
+        &.-active {
+            tint: $background;
+        }
+    }
+
+    TextArea {
+        border: round $secondary;
+        background: $background;
+
+        &:focus {
+            border: round $primary;
+        }
+
+        scrollbar-color: $secondary $background;
+        scrollbar-background: $background;
+        scrollbar-corner-color: $background;
+        scrollbar-size: 1 1;
+        scrollbar-gutter: stable;
+    }
+    """
+
+    model_name: str
+    """Model identifier"""
+
+    litellm_params: reactive[str] = reactive("")
+    """Model params"""
+
+    def __init__(self, model_name: str, litellm_params: dict, *a, **kw):
+        super().__init__(*a, **kw)
+        self.model_name = model_name
+        self.litellm_params = yaml.dump(litellm_params)
+
+    @property
+    def config(self) -> dict:
+        return self.app.config
+
+    def compose(self) -> ComposeResult:
+        with Horizontal(classes="model-header"):
+            yield Label(f"Model: {self.model_name}", classes="model-label")
+            yield Button("Save", id="save-button")
+        yield TextArea.code_editor(self.litellm_params, language="yaml")
+
+    def _is_valid_yaml(self, yaml_text: str) -> bool:
+        try:
+            yaml.safe_load(yaml_text)
+            return True
+        except yaml.YAMLError:
+            return False
+
+    @on(Button.Pressed, "#save-button")
+    def on_config_change(self, event: Button.Pressed):
+        text_area = self.query_one(TextArea)
+        config_text = text_area.text
+
+        if not self._is_valid_yaml(config_text):
+            self.notify(
+                f"Error while saving config for: {self.model_name}; Invalid yaml format.", severity="error", timeout=5)
+            return
+
+        self.litellm_params = config_text
+        new_config = yaml.safe_load(self.litellm_params)
+        models = self.config.get("models", [])
+        for model in models:
+            if model["model_name"] == self.model_name:
+                model["litellm_params"] = new_config
+                break
+        self.app.update_config()
+        self.notify(f"Configuration saved for {self.model_name}", severity="information", timeout=3)
+
+
+class ModelsList(SettingsSection):
+    """Models List section component."""
 
     def __init__(self, **kwargs):
-        super().__init__("Model Configuration", **kwargs)
+        super().__init__("Available Models", **kwargs)
+
+    @property
+    def config(self) -> dict:
+        return self.app.config
 
     def compose(self) -> ComposeResult:
         yield from super().compose()
 
-        yield Static("Model Name:")
-        yield Input(
-            placeholder="e.g., gemini/gemini-2.0-flash",
-            id="model-name",
-            validators=[
-                Function(lambda value: value is not None and value.strip()),
-            ],
-            valid_empty=False
-        )
+        yield ScrollableContainer(id="config-container")
 
-        yield Static("API Base:")
-        yield Input(placeholder="API base URL (optional)", id="api-base", valid_empty=True)
+    def on_mount(self) -> None:
+        try:
+            available_models = self.config.get("models", [])
+            no_model_configured = True
+            for model in available_models:
+                model_name = model["model_name"]
+                if model_name:
+                    litellm_params = model.get("litellm_params")
+                    self.add_model_config(model_name, litellm_params)
+                    no_model_configured = False
 
-        yield Static("API Key:")
-        yield Input(
-            placeholder="Your API key", password=True, id="api-key",
-            validators=[
-                Function(lambda value: value is not None and value.strip()),
-            ],
-            valid_empty=False
-        )
+            if no_model_configured:
+                label = Label("No model configurations found.")
+                config_container = self.query_one("#config-container")
+                config_container.mount(label)
+        except Exception as e:
+            logger.error(f"Error loading config: {str(e)}")
+            self.notify(f"Error loading config: {str(e)}", severity="error", timeout=5)
 
-        yield Static("API Version:")
-        yield Input(placeholder="API version (optional)", id="api-version", valid_empty=True)
-
-        yield Static("Temperature:")
-        yield Input(
-            placeholder="0.0 - 1.0 (default: 1.0)",
-            id="temperature",
-            type="number",
-            validators=[
-                Number(
-                    minimum=0.0,
-                    maximum=1.0,
-                    failure_description="Temperature must be a value in the range 0.0 to 1.0",
-                )
-            ],
-            valid_empty=False
-        )
-
-        yield Static("Top P:")
-        yield Input(
-            placeholder="0.0 - 1.0 (default: 1.0)",
-            id="top-p",
-            type="number",
-            validators=[
-                Number(
-                    minimum=0.0,
-                    maximum=1.0,
-                    failure_description="Top P must be a value in the range 0.0 to 1.0",
-                )
-            ],
-            valid_empty=False
-        )
-
-        yield Static("Max Tokens:")
-        yield Input(
-            placeholder="Maximum tokens (optional)",
-            id="max-tokens",
-            type="integer",
-            valid_empty=True
-        )
-
-        yield Static("Max Completion Tokens:")
-        yield Input(
-            placeholder="Maximum completion tokens (optional)",
-            id="max-completion-tokens",
-            type="integer",
-            valid_empty=True
-        )
-
-    @on(Input.Changed, "#model-name")
-    def on_model_name_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if event.validation_result.is_valid and event.value:
-            if hasattr(settings_widget, 'model_name'):
-                settings_widget.model_name = event.value
-
-        if not event.validation_result.is_valid:
-            if hasattr(settings_widget, 'notify'):
-                settings_widget.notify("Model name is required", severity="error", timeout=5)
-
-    @on(Input.Changed, "#api-base")
-    def on_api_base_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if hasattr(settings_widget, 'api_base'):
-            settings_widget.api_base = event.value if event.value else None
-
-    @on(Input.Changed, "#api-key")
-    def on_api_key_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if event.validation_result.is_valid and event.value:
-            if hasattr(settings_widget, 'api_key'):
-                settings_widget.api_key = event.value
-
-        if not event.validation_result.is_valid:
-            if hasattr(settings_widget, 'notify'):
-                settings_widget.notify("API key is required", severity="error", timeout=5)
-
-    @on(Input.Changed, "#api-version")
-    def on_api_version_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if hasattr(settings_widget, 'api_version'):
-            settings_widget.api_version = event.value if event.value else None
-
-    @on(Input.Changed, "#temperature")
-    def on_temperature_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if event.validation_result.is_valid and event.value:
-            if hasattr(settings_widget, 'temperature'):
-                settings_widget.temperature = float(event.value)
-
-        if not event.validation_result.is_valid:
-            if hasattr(settings_widget, 'notify'):
-                settings_widget.notify(
-                    "Temperature must be a value in the range 0.0 to 1.0", 
-                    severity="error", 
-                    timeout=5
-                )
-
-    @on(Input.Changed, "#top-p")
-    def on_top_p_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if event.validation_result.is_valid and event.value:
-            if hasattr(settings_widget, 'top_p'):
-                settings_widget.top_p = float(event.value)
-
-        if not event.validation_result.is_valid:
-            if hasattr(settings_widget, 'notify'):
-                settings_widget.notify(
-                    "Top P must be a value in the range 0.0 to 1.0", 
-                    severity="error", 
-                    timeout=5
-                )
-
-    @on(Input.Changed, "#max-tokens")
-    def on_max_tokens_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if hasattr(settings_widget, 'max_tokens'):
-            settings_widget.max_tokens = int(event.value) if event.value else None
-
-    @on(Input.Changed, "#max-completion-tokens")
-    def on_max_completion_tokens_changed(self, event: Input.Changed) -> None:
-        settings_widget = self.parent.parent
-        if hasattr(settings_widget, 'max_completion_tokens'):
-            settings_widget.max_completion_tokens = int(event.value) if event.value else None
+    def add_model_config(self, model_name: str, litellm_params: dict):
+        config_container = self.query_one("#config-container")
+        model_config = ModelConfig(model_name, litellm_params)
+        config_container.mount(model_config)

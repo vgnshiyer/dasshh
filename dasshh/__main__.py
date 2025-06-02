@@ -1,11 +1,12 @@
 import click
 import time
+import yaml
 from rich.console import Console
 
 from dasshh.core.logging import setup_logging
 from dasshh.ui.utils import load_config, DEFAULT_CONFIG_PATH
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 
 
 @click.group(
@@ -45,6 +46,13 @@ def main(ctx, version: bool = False, log_file=None, debug=False) -> None:
             console.clear()
             from dasshh.ui.app import Dasshh
 
+        # check if config has old format
+        if DEFAULT_CONFIG_PATH.exists():
+            config = yaml.safe_load(DEFAULT_CONFIG_PATH.read_text())
+            if "model" in config:
+                migrate_to_v2()
+                click.echo("Configuration file migrated to the new format")
+
         app = Dasshh()
         app.run()
 
@@ -57,6 +65,30 @@ def init_config():
     click.echo(
         "Please edit this file to set your model API key before starting the application."
     )
+
+
+def migrate_to_v2():
+    """Migrate the configuration file to the new format."""
+    config = load_config()
+    if not config:
+        return
+
+    model_v1 = config.get("model", {})
+    if not model_v1:
+        return
+
+    model_v1["model"] = model_v1.pop("name", "")
+    model_v1["base_url"] = model_v1.pop("api_base", "")
+    model_config = {
+        "model_name": model_v1["model"],
+        "litellm_params": {
+            **model_v1,
+        },
+    }
+    config.setdefault("models", []).append(model_config)
+    config.pop("model")
+
+    DEFAULT_CONFIG_PATH.write_text(yaml.dump(config))
 
 
 if __name__ == "__main__":
