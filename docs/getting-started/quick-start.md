@@ -14,18 +14,35 @@ dasshh init-config
 
 This will create a config file at `~/.dasshh/config.yaml`.
 
-To get started, you need to set the model you want to use.
+To get started, you need to configure at least one model. The new configuration format supports multiple models:
 
-1. `model.name`: The model provider and model name.
-2. `model.api_key`: Your API key for the chosen provider.
+1. `model_name`: A unique identifier for your model
+2. `litellm_params.model`: The model provider and model name
+3. `litellm_params.api_key`: Your API key for the chosen provider
 
 **Example:**
 
 ```yaml
-model:
-  name: gemini/gemini-2.0-flash
-  api_key: <your-google-AI-studio-api-key>
+dasshh:
+  selected_model: my-gemini  # Select which model to use
+
+models:
+  - model_name: my-gemini
+    litellm_params:
+      model: gemini/gemini-2.0-flash
+      api_key: <your-google-AI-studio-api-key>
 ```
+
+!!! note "Automatic Migration"
+    If you have an existing config file with old format (supporting only one model), Dasshh will automatically migrate it to the new format when you start the application.
+
+### Multiple Models
+
+You can configure multiple models and switch between them:
+
+- **In the config file**: Set `dasshh.selected_model` to the `model_name` you want to use
+- **In the UI**: Use `Ctrl+M` to quickly switch between configured models
+- **In Settings**: Use the visual interface to add, edit, and manage your model configurations
 
 You can also set the model name and API key in the settings menu.
 
