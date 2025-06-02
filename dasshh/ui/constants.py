@@ -23,7 +23,7 @@ models:
 - model_name: mymodel
   litellm_params:
     model:
-    api_base:
+    base_url:
     api_key:
     api_version:
     temperature: 1.0

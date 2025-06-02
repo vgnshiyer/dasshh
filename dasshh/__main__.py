@@ -78,6 +78,7 @@ def migrate_to_v2():
         return
 
     model_v1["model"] = model_v1.pop("name", "")
+    model_v1["base_url"] = model_v1.pop("api_base", "")
     model_config = {
         "model_name": model_v1["model"],
         "litellm_params": {
