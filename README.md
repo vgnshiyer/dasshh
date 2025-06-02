@@ -76,9 +76,14 @@ This creates a config file at `~/.dasshh/config.yaml`.
 Edit the config file to set your model and API key:
 
 ```yaml
-model:
-  name: gemini/gemini-2.0-flash
-  api_key: <your-google-AI-studio-api-key>
+dasshh:
+  selected_model: my-gemini  # Select which model to use
+
+models:
+  - model_name: my-gemini
+    litellm_params:
+      model: gemini/gemini-2.0-flash
+      api_key: <your-google-AI-studio-api-key>
 ```
 
 > See [litellm docs](https://docs.litellm.ai/docs/providers) for all supported models and providers.
