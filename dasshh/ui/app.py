@@ -25,7 +25,7 @@ class Dasshh(App):
     BINDINGS = [
         ("ctrl+c", "quit", "Quit"),
         ("ctrl+t", "toggle_theme", "Toggle Theme"),
-        ("ctrl+m", "select_model", "Select Model"),
+        ("ctrl+p", "select_model", "Select Model"),
     ]
 
     ENABLE_COMMAND_PALETTE = False

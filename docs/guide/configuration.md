@@ -88,7 +88,7 @@ You can configure multiple models and switch between them:
 
 1. **Configure models** - Add multiple model configurations in the `models` array
 2. **Select active model** - Set `dasshh.selected_model` to the `model_name` of your choice
-3. **Switch models** - Use `Ctrl+M` in the UI to quickly switch between configured models
+3. **Switch models** - Use `Ctrl+P` in the UI to quickly switch between configured models
 4. **Manage in UI** - Use the Settings panel to add, edit, or configure models with a visual interface
 
 ## Supported Models
