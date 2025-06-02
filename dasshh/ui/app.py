@@ -106,7 +106,8 @@ class Dasshh(App):
 
     def watch_selected_model(self, model: str) -> None:
         self.selected_model = model
-        self._configure_runtime()
+        if hasattr(self, "runtime"):
+            self.runtime.model_config = self.get_model_config(model)
         self.config["dasshh"]["selected_model"] = model
         self.update_config()
 
