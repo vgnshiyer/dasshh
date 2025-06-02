@@ -15,29 +15,19 @@ dasshh:
   skip_summarization: false
   system_prompt:
   tool_directories:
-    - {DEFAULT_TOOLS_PATH}
+  - {DEFAULT_TOOLS_PATH}
   theme: lime
-  selected_model: gemini-2.0-flash
-
-model:
-  name: gemini/gemini-2.0-flash
-  api_base:
-  api_key:
-  api_version:
-  temperature: 1.0
-  top_p: 1.0
-  max_tokens:
-  max_completion_tokens:
+  selected_model: mymodel
 
 models:
-  - model_name: gemini-2.0-flash
-    litellm_params:
-      model: gemini/gemini-2.0-flash
-      api_base:
-      api_key:
-      api_version:
-      temperature: 1.0
-      top_p: 1.0
-      max_tokens:
-      max_completion_tokens:
+- model_name: mymodel
+  litellm_params:
+    model:
+    api_base:
+    api_key:
+    api_version:
+    temperature: 1.0
+    top_p: 1.0
+    max_tokens:
+    max_completion_tokens:
 """
